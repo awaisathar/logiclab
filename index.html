@@ -137,7 +137,10 @@ g[tabindex]:focus-visible .hit{stroke:var(--focus);stroke-width:3}
 .gicon{width:42px;height:34px;flex:none}
 .gicon .gs,.gicon .gs2{stroke-width:7}
 .gicon .bub{stroke-width:3}
-.tokchip .gicon{width:30px}
+.tokchip{display:inline-flex;cursor:grab}
+.tokchip .gicon{width:46px;height:40px}
+.traybar{position:sticky;bottom:10px;z-index:5;display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;margin-top:8px;padding:6px 12px;background:var(--surface-2);border:2px solid var(--ink);border-radius:20px;box-shadow:0 6px 14px rgba(0,0,0,.18)}
+.trayl{font:600 13px var(--font-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .gate-zone{fill:transparent;stroke:none}
 .slot{fill:var(--surface-2);stroke:var(--muted);stroke-width:3;stroke-dasharray:7 5}
 .slotlbl{font:600 16px var(--font-display);fill:var(--muted)}
@@ -277,6 +280,16 @@ const LEVELS=[
   say:'Now build the half adder yourself! The top lamp is SUM and the bottom lamp is CARRY. Pick a gate for each.',
   hint:'SUM lights when exactly one switch is on. CARRY lights only when both are on.',
   win:{h:'You built an adder!',p:'XOR for the sum and AND for the carry. Chain lots of these together and a computer can add big numbers.'}},
+ {w:4,t:'Full adder',kind:'faex',inputs:3,pal:{g:'OR'},
+  gates:['XOR','AND','XOR','AND','OR'],lampGates:[2,4],prefill:[['A','B'],['A','B'],['N1','C'],['N1','C'],['N2','N4']],
+  say:'What if a number is carried in from the column before? A full adder adds three bits: A, B and a carry in, C. Try 1 + 1 + 1!',
+  hint:'Tap a row in the table. The carry out is the left digit and the sum is the right digit.',
+  win:{h:'1 + 1 + 1 = 11',p:'Three ones make 11 in binary: carry out 1 and sum 1. Look inside: two half adders and an OR gate. The OR gate joins the two carries.',name:'full adder',lead:'This circuit is called a'}},
+ {w:4,t:'Build the full adder',kind:'fa',inputs:3,pal:{g:'OR'},
+  gates:['XOR','AND','XOR','AND','OR'],lampGates:[2,4],
+  say:'Your turn! Build the full adder from these five gates. One lamp shows the SUM and the other shows the CARRY OUT. You already know how to build a half adder.',
+  hint:'The first two gates are a half adder for A and B. The next two are a second half adder for the first sum and C. The OR gate joins the two carries.',
+  win:{h:'You built a full adder!',p:'Two half adders and an OR gate. Line up many full adders and a computer can add big numbers, one column at a time.'}},
  {w:4,t:'NOT from NAND',kind:'nand',inputs:1,nands:1,fn:a=>!a,pal:{g:'AND',bO:true},
   say:'NAND is a super gate: every other gate can be built from NANDs! First make a NOT. Drag the plug for switch A into both sockets.',
   hint:'Put plug A in both sockets of the NAND.',
@@ -305,7 +318,11 @@ function sg(c,a,b){
   return {a,b,x,y,z,o:c.bO?!z:z};
 }
 function ev(c,a,b){return sg(c,a,b).o;}
-function rowAB(n,r){return n===1?{a:r===1,b:false}:{a:r>=2,b:r%2===1};}
+function rowAB(n,r){
+  if(n===1)return {a:r===1,b:false,c:false};
+  if(n===3)return {a:r>=4,b:(r>>1)%2===1,c:r%2===1};
+  return {a:r>=2,b:r%2===1,c:false};
+}
 function sigOf(c){let s='';for(let r=0;r<4;r++){const q=rowAB(2,r);s+=ev(c,q.a,q.b)?'1':'0';}return s;}
 function formula(c,na='A',nb='B'){
   if(c.n===1)return c.g==='NOT'?'NOT '+na:na;
@@ -328,29 +345,42 @@ function deMorgan(c){
   return C({g:c.g==='AND'?'OR':'AND',bA:!c.bA,bB:!c.bB,bO:!c.bO});
 }
 /* NAND plug board: nd[i]=[ref,ref], ref is null, 'A', 'B' or 'N1','N2' (output of an earlier NAND) */
-function ndEval(nd,a,b){
+function ndEval(nd,a,b,types,c){
   const outs=[],vals=[];
-  const val=r=>r==='A'?a:r==='B'?b:(r&&r[0]==='N')?outs[+r.slice(1)-1]:false;
-  nd.forEach(g=>{const x=!!val(g[0]),y=!!val(g[1]);vals.push([x,y]);outs.push(g[0]!=null&&g[1]!=null?!(x&&y):false);});
+  const val=r=>r==='A'?a:r==='B'?b:r==='C'?c:(r&&r[0]==='N')?outs[+r.slice(1)-1]:false;
+  nd.forEach((g,i)=>{
+    const x=!!val(g[0]),y=!!val(g[1]),t=types?types[i]:'NAND';
+    vals.push([x,y]);
+    outs.push(g[0]!=null&&g[1]!=null?!!(t==='NAND'?!(x&&y):GATES[t](x,y)):false);
+  });
   return {outs,vals,o:outs[outs.length-1]};
 }
 function refsFor(L,gi){
-  const r=['A'];if(L.inputs===2)r.push('B');
-  for(let j=0;j<gi;j++)r.push('N'+(j+1));
+  const r=['A'];if(L.inputs>=2)r.push('B');if(L.inputs>=3)r.push('C');
+  for(let j=0;j<gi;j++)if(!(L.lampGates&&L.lampGates.includes(j)))r.push('N'+(j+1));
   return r;
 }
 
 /* ---------- state ---------- */
-const S={lvl:0,view:'play',a:false,b:false,p:C({}),q:null,nd:null,seen:new Set([0]),won:false,hint:false,fresh:false};
+const S={lvl:0,view:'play',a:false,b:false,c:false,p:C({}),q:null,nd:null,seen:new Set([0]),won:false,hint:false,fresh:false};
 const cc=id=>id==='q'?S.q:S.p;
-const isExp=L=>L.kind==='explore'||L.kind==='adder';
+const isExp=L=>L.kind==='explore'||L.kind==='adder'||L.kind==='faex';
 let done=new Set();
-const KEY='bubblegates.done.v2';
+const KEY='logiclab.done';
 try{JSON.parse(localStorage.getItem(KEY)||'[]').forEach(i=>done.add(i));}catch(e){}
 function saveDone(){try{localStorage.setItem(KEY,JSON.stringify([...done]));}catch(e){}}
-const curRow=()=>S.p.n===1?(S.a?1:0):((S.a?2:0)+(S.b?1:0));
-const rowsN=()=>S.p.n===1?2:4;
+const curRow=()=>S.p.n===1?(S.a?1:0):S.p.n===3?((S.a?4:0)+(S.b?2:0)+(S.c?1:0)):((S.a?2:0)+(S.b?1:0));
+const rowsN=()=>1<<S.p.n;
 function matches(L){
+  if(L.kind==='fa'){
+    if(S.nd.some(g=>g[0]==null||g[1]==null))return false;
+    for(let r=0;r<8;r++){
+      const q=rowAB(3,r),res=ndEval(S.nd,q.a,q.b,L.gates,q.c);
+      const sum=(q.a!==q.b)!==q.c,cout=(q.a&&q.b)||(q.c&&(q.a!==q.b));
+      if(res.outs[L.lampGates[0]]!==sum||res.outs[L.lampGates[1]]!==!!cout)return false;
+    }
+    return true;
+  }
   if(L.kind==='nand'){
     if(S.nd.some(g=>g[0]==null||g[1]==null))return false;
     for(let r=0;r<(L.inputs===1?2:4);r++){const q=rowAB(L.inputs,r);if(ndEval(S.nd,q.a,q.b).o!==L.fn(q.a,q.b))return false;}
@@ -368,15 +398,16 @@ const yourVal=(L,a,b)=>L.kind==='nand'?ndEval(S.nd,a,b).o:ev(S.p,a,b);
 
 function startLevel(i,quiet){
   const L=LEVELS[i];
-  S.lvl=i;S.view='play';S.a=false;S.b=false;S.won=false;S.hint=false;S.fresh=false;
+  S.lvl=i;S.view='play';S.a=false;S.b=false;S.c=false;S.won=false;S.hint=false;S.fresh=false;
   S.q=null;S.nd=null;
   if(L.kind==='explore')S.p=C(L.c);
   else if(L.kind==='adder'){S.p=C(L.c1);S.q=C(L.c2);}
   else if(L.kind==='adderb'){S.p=C({g:null});S.q=C({g:null});}
   else if(L.kind==='nand'){S.p=C({n:L.inputs});S.nd=Array.from({length:L.nands},()=>[null,null]);}
+  else if(L.kind==='fa'||L.kind==='faex'){S.p=C({n:3});S.nd=L.kind==='faex'?L.prefill.map(x=>x.slice()):L.gates.map(()=>[null,null]);}
   else S.p=C({g:L.kind==='sandbox'?L.start:null});
   S.seen=new Set([0]);
-  if(L.kind==='sandbox'){done.add(i);saveDone();}
+  if(L.kind==='sandbox'){done.add(L.t);saveDone();}
   render();
   if(!quiet)window.scrollTo(0,0);
 }
@@ -385,7 +416,7 @@ function afterChange(){
   S.seen.add(curRow());
   if(!S.won&&L.kind!=='sandbox'){
     const ok=isExp(L)?S.seen.size===rowsN():(matches(L)&&(!L.hidden||S.seen.size===4));
-    if(ok){S.won=true;S.fresh=true;done.add(S.lvl);saveDone();}
+    if(ok){S.won=true;S.fresh=true;done.add(L.t);saveDone();}
   }
   render();
   if(S.fresh){S.fresh=false;const w=document.querySelector('.win');if(w)setTimeout(()=>w.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest'}),60);}
@@ -488,20 +519,23 @@ const tokFill=(r,on)=>on?(r[0]==='N'?'var(--xor)':'var(--wire-on)'):'var(--track
 function tokIcon(r){
   return `<svg class="gicon" viewBox="-14 -14 28 28" aria-hidden="true"><circle r="12" fill="${tokFill(r,true)}" class="tokc"/><text y="4.5" text-anchor="middle" class="toklbl" fill="var(--on-ink)">${r}</text></svg>`;
 }
-function nandGate(i,g,res,last,lay){
-  const nd=S.nd[i],sh=SHAPES.AND,tip=sh.tip,filled=nd[0]!=null&&nd[1]!=null,ov=!!res.outs[i];
+function plugGate(i,g,res,o){
+  const nd=S.nd[i],sh=SHAPES[o.type],tip=sh.tip,filled=nd[0]!=null&&nd[1]!=null,ov=!!res.outs[i],bx=o.bub?15:0;
   let h=`<g transform="translate(${g.ox},${g.oy}) scale(${g.s})">`;
-  [-28,28].forEach((y,si)=>{h+=wire(`M20,${y} H46`,nd[si]!=null&&res.vals[i][si]);});
-  if(last)h+=wire(`M${tip+15},0 H${((lay.lamp.x-20*lay.lamp.s-g.ox)/g.s).toFixed(1)}`,ov);
+  [-28,28].forEach((y,si)=>{h+=wire(`M16,${y} H46`,nd[si]!=null&&res.vals[i][si]);});
+  if(o.lampX!=null)h+=wire(`M${tip+bx},0 H${((o.lampX-20*o.lampS-g.ox)/g.s).toFixed(1)}`,ov);
   else{
-    h+=wire(`M${tip+15},0 H${tip+26}`,ov);
-    h+=`<circle cx="${tip+38}" cy="0" r="13" fill="${tokFill('N',ov)}" class="tokc"/><text x="${tip+38}" y="5" text-anchor="middle" class="toklbl" fill="${ov?'var(--on-ink)':'var(--ink)'}">N${i+1}</text>`;
+    h+=wire(`M${tip+bx},0 H${tip+bx+11}`,ov);
+    h+=`<circle cx="${tip+bx+23}" cy="0" r="13" fill="${tokFill('N',ov)}" class="tokc"/><text x="${tip+bx+23}" y="5" text-anchor="middle" class="toklbl" fill="${ov?'var(--on-ink)':'var(--ink)'}">N${i+1}</text>`;
   }
-  h+=`<path d="${sh.d}" fill="${COL.AND}" class="gs"/>`+face(sh.fx,filled&&ov)+`<circle cx="${tip+8}" cy="0" r="7.5" class="bub"/>`;
+  h+=`<path d="${sh.d}" fill="${COL[o.type]}" class="gs"/>`+(o.type==='XOR'?'<path d="M24,-48 C41,-25 41,25 24,48" class="gs2"/>':'')+face(sh.fx,filled&&ov)+(o.bub?`<circle cx="${tip+8}" cy="0" r="7.5" class="bub"/>`:'');
   [-28,28].forEach((y,si)=>{
     const ref=nd[si],on=ref!=null&&res.vals[i][si];
-    h+=`<g data-act="sock" data-gi="${i}" data-si="${si}" data-filled="${ref!=null}" data-fid="sock-${i}-${si}" tabindex="0" role="button" aria-label="Socket ${si+1} of NAND ${i+1}: ${ref||'empty'}"><circle cx="15" cy="${y}" r="24" class="hit"/>`
-      +(ref!=null?`<circle cx="15" cy="${y}" r="15" fill="${tokFill(ref,on)}" class="tokc"/><text x="15" y="${y+5}" text-anchor="middle" class="toklbl" fill="${on?'var(--on-ink)':'var(--ink)'}">${ref}</text>`:`<circle cx="15" cy="${y}" r="13" class="sockring"/>`)+'</g>';
+    const inner=ref!=null
+      ?`<circle cx="11" cy="${y}" r="14" fill="${tokFill(ref,on)}" class="tokc"/><text x="11" y="${y+5}" text-anchor="middle" class="toklbl" fill="${on?'var(--on-ink)':'var(--ink)'}">${ref}</text>`
+      :`<circle cx="11" cy="${y}" r="12" class="sockring"/>`;
+    h+=o.locked?`<g>${inner}</g>`
+      :`<g data-act="sock" data-gi="${i}" data-si="${si}" data-filled="${ref!=null}" data-fid="sock-${i}-${si}" tabindex="0" role="button" aria-label="Socket ${si+1} of gate ${i+1}: ${ref||'empty'}"><circle cx="11" cy="${y}" r="24" class="hit"/>${inner}</g>`;
   });
   return h+'</g>';
 }
@@ -513,8 +547,19 @@ function stageNand(L){
   let s=`<svg viewBox="0 0 360 ${lay.h}" role="group" aria-label="NAND plug board with switches and a lamp">`;
   s+=sw('a','A',lay.sw[0][0],lay.sw[0][1],a);
   if(L.inputs===2)s+=sw('b','B',lay.sw[1][0],lay.sw[1][1],b);
-  lay.g.forEach((g,i)=>{s+=nandGate(i,g,res,i===k-1,lay);});
+  lay.g.forEach((g,i)=>{s+=plugGate(i,g,res,{type:'AND',bub:true,lampX:i===k-1?lay.lamp.x:null,lampS:lay.lamp.s});});
   s+=`<g transform="translate(${lay.lamp.x},${lay.lamp.y}) scale(${lay.lamp.s})">${lampSVG(!!res.o)}</g>`;
+  return s+'</svg>';
+}
+function stageFA(L){
+  const res=ndEval(S.nd,S.a,S.b,L.gates,S.c);
+  let s='<svg viewBox="0 0 360 444" role="group" aria-label="Full adder plug board with three switches and two lamps">';
+  s+=sw('a','A',43,170,S.a)+sw('b','B',43,220,S.b)+sw('c','C',43,270,S.c)+'<text x="12" y="248" class="tag">CARRY IN</text>';
+  L.gates.forEach((t,i)=>{
+    const oy=52+84*i,li=L.lampGates.indexOf(i);
+    s+=plugGate(i,{ox:100,oy,s:.8},res,{type:t,bub:false,lampX:li>=0?304:null,lampS:.7,locked:L.kind==='faex'});
+    if(li>=0)s+=`<g transform="translate(304,${oy}) scale(.7)">${lampSVG(!!res.outs[i])}</g><text x="304" y="${oy+38}" text-anchor="middle" class="tag">${li===0?'SUM':'CARRY OUT'}</text>`;
+  });
   return s+'</svg>';
 }
 function palSVG(p){
@@ -529,6 +574,7 @@ const LOGO=`<svg viewBox="20 -54 126 108" aria-hidden="true"><path d="${SHAPES.A
 const bit=(v,k,x='')=>`<span class="bit ${k}${v?1:0}${x}">${v?1:0}</span>`;
 function tableHTML(L){
   if(L.kind==='adder'||L.kind==='adderb')return adderTable(L);
+  if(L.kind==='fa'||L.kind==='faex')return fullTable(L);
   const n=S.p.n,rows=rowsN(),cur=curRow(),st=L.story,build=L.kind==='build'||L.kind==='nand';
   let th=`<th scope="col">${st?st.sa:'A'}</th>`+(n===2?`<th scope="col">${st?st.sb:'B'}</th>`:'');
   th+=build?`<th scope="col">${st?'Wanted':'Target'}</th><th scope="col">Yours</th><th scope="col"><span class="sr">Same?</span></th>`:'<th scope="col">Lamp</th>';
@@ -544,6 +590,18 @@ function tableHTML(L){
     b+=`<tr data-act="row" data-r="${r}" class="${r===cur?'cur':''}" title="Tap to set the switches">${cells}</tr>`;
   }
   return `<table class="tt"><caption class="sr">Truth table. 1 means ON and 0 means OFF.</caption><thead><tr>${th}</tr></thead><tbody>${b}</tbody></table><p class="legend">1 = ON, 0 = OFF. Tap a row to set the switches.</p>`;
+}
+function fullTable(L){
+  const b=L.kind==='fa',cur=curRow();
+  let body='';
+  for(let r=0;r<8;r++){
+    const q=rowAB(3,r),known=b||S.seen.has(r),res=ndEval(S.nd,q.a,q.b,L.gates,q.c);
+    const sv=res.outs[L.lampGates[0]],cv=res.outs[L.lampGates[1]];
+    const ws=b&&sv!==((q.a!==q.b)!==q.c),wc=b&&cv!==!!((q.a&&q.b)||(q.c&&(q.a!==q.b)));
+    const cell=(v,w)=>known?bit(v,'o',w?' wrong':''):'<span class="bit q" aria-label="not tried yet">?</span>';
+    body+=`<tr data-act="row" data-r="${r}" class="${r===cur?'cur':''}" title="Tap to set the switches"><td>${bit(q.a,'in')}</td><td>${bit(q.b,'in')}</td><td>${bit(q.c,'in')}</td><td>${cell(sv,ws)}</td><td>${cell(cv,wc)}</td></tr>`;
+  }
+  return `<table class="tt"><caption class="sr">Full adder truth table</caption><thead><tr><th scope="col">A</th><th scope="col">B</th><th scope="col">C</th><th scope="col">Sum</th><th scope="col">Carry</th></tr></thead><tbody>${body}</tbody></table><p class="legend">${b?'A red ring means the lamp is wrong for that row. ':''}Tap a row to set the switches.</p>`;
 }
 function adderTable(L){
   const b=L.kind==='adderb',cur=curRow();
@@ -586,9 +644,20 @@ function adderPanel(L){
   if(L.kind==='adderb')h+=`<div class="card"><h2>Your gates</h2><p class="sub2">Sum gate (top lamp)</p>${gateChips(L,'p',true)}<p class="sub2">Carry gate (bottom lamp)</p>${gateChips(L,'q',false)}<p class="legend">${DRAG_HELP}</p><p class="legend">Sum: <b>${formula(S.p)}</b><br>Carry: <b>${formula(S.q)}</b></p></div>`;
   return h;
 }
+function plugName(L,r){return r==='A'||r==='B'?'Switch '+r:r==='C'?'Carry in C':(L.kind==='nand'?'Output of NAND ':'Output of gate ')+r.slice(1);}
+function plugTray(L){
+  const refs=refsFor(L,(L.nands||L.gates.length)-1);
+  return `<div class="traybar" role="group" aria-label="Plugs"><span class="trayl">Plugs</span>${refs.map(r=>`<span class="tokchip" data-drag="tok" data-ref="${r}" role="img" aria-label="Plug ${plugName(L,r)}" title="${plugName(L,r)}">${tokIcon(r)}</span>`).join('')}</div>`;
+}
 function nandPanel(L){
-  const refs=refsFor(L,L.nands-1);
-  return `<div class="card"><h2>Plugs</h2><div class="seg">${refs.map(r=>`<span class="chip tokchip" data-drag="tok" data-ref="${r}" role="img" aria-label="Plug ${r}">${tokIcon(r)}${r==='A'||r==='B'?'Switch '+r:'Output of NAND '+r.slice(1)}</span>`).join('')}</div><p class="legend">Drag a plug into a socket. Drag it out to remove it. Tapping a socket changes its plug too. Every socket needs a plug.</p></div>`;
+  return `<div class="card"><h2>How to plug in</h2><p class="legend">Drag a plug from the bar under the circuit into a socket, and drag it out to remove it. Tapping a socket changes its plug too. Every socket needs a plug. A, B${L.inputs===3?' and C are':' is'} a switch. N1, N2 and so on are the outputs of the gates with the same names.</p></div>`;
+}
+function faPanel(L){
+  const a=+S.a,b=+S.b,c=+S.c,res=ndEval(S.nd,S.a,S.b,L.gates,S.c);
+  const sm=res.outs[L.lampGates[0]]?1:0,co=res.outs[L.lampGates[1]]?1:0;
+  let h=`<div class="card"><h2>Adding in binary</h2><div class="readout" aria-live="polite">${a} + ${b} + ${c} = ${co}${sm}<small>Carry out ${co}, sum ${sm}<br>Everyday numbers: ${a} + ${b} + ${c} = ${a+b+c}</small></div></div>`;
+  if(L.kind==='fa')h+=nandPanel(L);
+  return h;
 }
 function sandboxPanel(L){
   const p=S.p,sig=sigOf(p),dm=deMorgan(p),tw=twinsOf(p);
@@ -613,25 +682,27 @@ function viewPlay(){
   if(L.kind==='build')stage=L.story?stageSingle(L):stageMirror(L);
   else if(L.kind==='nand')stage=stageNand(L);
   else if(L.kind==='adder'||L.kind==='adderb')stage=stageAdder(L);
+  else if(L.kind==='fa'||L.kind==='faex')stage=stageFA(L);
   else stage=stageSingle(L);
   let side='';
   if(L.kind==='build')side+=buildPanel(L);
   if(L.kind==='sandbox')side+=sandboxPanel(L);
   if(L.kind==='nand')side+=nandPanel(L);
   if(L.kind==='adder'||L.kind==='adderb')side+=adderPanel(L);
-  const cmp=L.kind==='build'||L.kind==='nand'||L.kind==='adderb';
+  if(L.kind==='fa'||L.kind==='faex')side+=faPanel(L);
+  const cmp=L.kind==='build'||L.kind==='nand'||L.kind==='adderb'||L.kind==='fa';
   side+=`<div class="card"><h2>${cmp?'Compare every row':'Truth table'}</h2>${tableHTML(L)}</div>`;
   if(showWin)side=winHTML(L)+side;
   side+=`<div class="row"><button class="btn small ghost" data-act="hint" data-fid="hint" aria-expanded="${S.hint}">${S.hint?'Hide hint':'Need a hint?'}</button>${isExp(L)?'':'<button class="btn small ghost" data-act="reset" data-fid="reset">Start over</button>'}${S.lvl>0?'<button class="btn small ghost" data-act="prev" data-fid="prev">Back</button>':''}</div>${S.hint?`<p class="hint">${L.hint}</p>`:''}`;
   return `<div><p class="kicker">World ${L.w+1} · Level ${S.lvl+1} of ${LEVELS.length}</p><h1 class="lvl">${L.t}</h1></div>
   <div class="say">${palSVG(L.pal)}<p>${L.say}</p></div>
-  <div class="play"><div class="stage">${stage}</div><div class="side">${side}</div></div>`;
+  <div class="play"><div class="stage">${stage}${(L.kind==='nand'||L.kind==='fa')?plugTray(L):''}</div><div class="side">${side}</div></div>`;
 }
 function viewMap(){
-  let h=`<div><h1 class="lvl">Pick a level</h1><p class="sub">Play in order, or jump to any level. ${done.size} of ${LEVELS.length} finished.</p></div>`;
+  let h=`<div><h1 class="lvl">Pick a level</h1><p class="sub">Play in order, or jump to any level. ${LEVELS.filter(l=>done.has(l.t)).length} of ${LEVELS.length} finished.</p></div>`;
   WORLDS.forEach((wn,wi)=>{
     h+=`<section class="world"><h2>World ${wi+1}<span>${wn}</span></h2><div class="tiles">`;
-    LEVELS.forEach((L,i)=>{if(L.w!==wi)return;h+=`<button class="tile ${done.has(i)?'done':''}" data-act="go" data-i="${i}" data-fid="t${i}"><span class="num">${i+1}</span><span class="tn">${L.t}</span>${done.has(i)?'<span class="ck" aria-label="finished">✓</span>':''}</button>`;});
+    LEVELS.forEach((L,i)=>{if(L.w!==wi)return;h+=`<button class="tile ${done.has(L.t)?'done':''}" data-act="go" data-i="${i}" data-fid="t${i}"><span class="num">${i+1}</span><span class="tn">${L.t}</span>${done.has(L.t)?'<span class="ck" aria-label="finished">✓</span>':''}</button>`;});
     h+='</div></section>';
   });
   return h;
@@ -757,8 +828,8 @@ function onClick(e){
   const el=e.target.closest('[data-act]');
   if(!el||el.disabled||el.hasAttribute('disabled'))return;
   const act=el.dataset.act,L=LEVELS[S.lvl];
-  if(act==='sw'){if(el.dataset.k==='a')S.a=!S.a;else S.b=!S.b;return afterChange();}
-  if(act==='row'){const q=rowAB(S.p.n,+el.dataset.r);S.a=q.a;S.b=q.b;return afterChange();}
+  if(act==='sw'){S[el.dataset.k]=!S[el.dataset.k];return afterChange();}
+  if(act==='row'){const q=rowAB(S.p.n,+el.dataset.r);S.a=q.a;S.b=q.b;S.c=q.c;return afterChange();}
   if(act==='bub'){const k=el.dataset.k;if(L.allow&&L.allow[k]){const c=cc(el.dataset.c);c[k]=!c[k];return afterChange();}return;}
   if(act==='gate'){cc(el.dataset.c||'p').g=el.dataset.g;return afterChange();}
   if(act==='sock'){
@@ -786,7 +857,7 @@ function boot(){
   app.addEventListener('click',onClick);
   app.addEventListener('pointerdown',onDown);
   app.addEventListener('keydown',onKey);
-  let i=LEVELS.findIndex((_,j)=>!done.has(j));
+  let i=LEVELS.findIndex(l=>!done.has(l.t));
   if(i<0)i=0;
   startLevel(i,true);
 }
