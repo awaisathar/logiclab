@@ -1,0 +1,794 @@
+<title>Logic Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: one friendly column on phones; circuit stage left and table/controls right on wide screens.
+   Colour: toy-electronics kit. Blue wires carry power, yellow circles are NOTs, each gate has its own colour. */
+:root{
+  --font-display:'Fredoka','Trebuchet MS',system-ui,sans-serif;
+  --font-body:'Atkinson Hyperlegible',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --bg:#EDF3FF; --surface:#FFFFFF; --surface-2:#DDE8FF; --ink:#16204A; --muted:#566190; --line:#C6D3F3;
+  --wire-off:#AAB6DB; --wire-on:#0BA5D6; --track:#C3CCE8; --on-ink:#0B1A3A;
+  --lamp:#FFC21A; --lamp-off:#E4E9F7; --bubble:#FFE066;
+  --and:#FF7F7F; --or:#35CDA7; --xor:#A48AF8; --not:#FF9F43;
+  --good:#17874A; --bad:#D6363C; --focus:#2F5BFF; --btn:#2F5BFF; --btn-ink:#FFFFFF;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10163A; --surface:#1B2352; --surface-2:#27316A; --ink:#EDF0FF; --muted:#A8B2DD; --line:#34417F;
+    --wire-off:#4B5892; --wire-on:#3FD6FF; --track:#3A4580; --on-ink:#0B1A3A;
+    --lamp:#FFD23F; --lamp-off:#2C3668; --bubble:#FFD84D;
+    --and:#FF8D8D; --or:#44DDB6; --xor:#B7A2FF; --not:#FFAE5C;
+    --good:#4FD686; --bad:#FF7F85; --focus:#8FA8FF; --btn:#7192FF; --btn-ink:#0E1440; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10163A; --surface:#1B2352; --surface-2:#27316A; --ink:#EDF0FF; --muted:#A8B2DD; --line:#34417F;
+  --wire-off:#4B5892; --wire-on:#3FD6FF; --track:#3A4580; --on-ink:#0B1A3A;
+  --lamp:#FFD23F; --lamp-off:#2C3668; --bubble:#FFD84D;
+  --and:#FF8D8D; --or:#44DDB6; --xor:#B7A2FF; --not:#FFAE5C;
+  --good:#4FD686; --bad:#FF7F85; --focus:#8FA8FF; --btn:#7192FF; --btn-ink:#0E1440; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.45 var(--font-body);
+  padding-block:14px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;color:inherit}
+.wrap{max-width:1000px;margin:0 auto;display:grid;gap:18px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font:700 28px/1 var(--font-display);margin:0}
+.brand svg{width:46px;height:34px;flex:none}
+.btn{font:600 18px/1 var(--font-display);border:0;border-radius:999px;padding:14px 24px;min-height:50px;background:var(--btn);color:var(--btn-ink);cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.2)}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.2)}
+.btn.ghost{background:var(--surface-2);color:var(--ink);box-shadow:0 4px 0 var(--line)}
+.btn.small{font-size:16px;padding:11px 18px;min-height:44px}
+.btn[disabled]{opacity:.55;cursor:default}
+.btn:focus-visible,.chip:focus-visible,.tile:focus-visible,tr:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.kicker{font:600 13px var(--font-display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h1.lvl{font:700 clamp(30px,7vw,42px)/1.1 var(--font-display);margin:2px 0 0;text-wrap:balance}
+.say{display:flex;gap:12px;align-items:flex-end}
+.pal{flex:0 0 78px;width:78px;height:auto}
+.say p{margin:0;background:var(--surface);border:2px solid var(--line);border-radius:22px 22px 22px 6px;padding:12px 16px;font-size:18px;max-width:62ch;min-width:0}
+.play{display:grid;gap:16px;align-items:start}
+@media (min-width:860px){.play{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}}
+.stage{background:var(--surface);border:2px solid var(--line);border-radius:28px;padding:10px}
+.stage svg{display:block;width:100%;height:auto}
+.side{display:grid;gap:14px;min-width:0}
+.card{background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:14px}
+.card h2{font:600 15px var(--font-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.legend{margin:6px 2px 0;font-size:15px;color:var(--muted)}
+
+/* circuit pieces */
+.wire{fill:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.wireg{fill:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.on.wire,.on.wireg{stroke:var(--wire-on)}
+.off.wire,.off.wireg{stroke:var(--wire-off)}
+.gs{stroke:var(--ink);stroke-width:3;stroke-linejoin:round}
+.gs2{fill:none;stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.bub{fill:var(--bubble);stroke:var(--ink);stroke-width:2.5}
+.bubslot{fill:var(--surface);stroke:var(--muted);stroke-width:2;stroke-dasharray:3 3;animation:nudge 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.sockring{fill:var(--surface);stroke:var(--muted);stroke-width:2;stroke-dasharray:3 3;animation:nudge 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.tokc{stroke:var(--ink);stroke-width:2.5}
+.hit{fill:transparent;stroke:none}
+g[tabindex]{cursor:pointer;outline:none}
+g[tabindex]:focus-visible .hit{stroke:var(--focus);stroke-width:3}
+.mystery{fill:var(--surface-2);stroke:var(--ink);stroke-width:3;stroke-dasharray:7 5}
+.qmark{font:700 54px var(--font-display);fill:var(--muted)}
+.swtxt{font:700 15px var(--font-display)}
+.swlbl{font:700 16px var(--font-display);fill:var(--ink)}
+.toklbl{font:700 14px var(--font-display)}
+.tag{font:600 11px var(--font-display);letter-spacing:.14em;fill:var(--muted)}
+.verdict{font:700 20px var(--font-display)}
+.lamp .bulb{transform-box:fill-box;transform-origin:center}
+.lamp.on .bulb{animation:pop .3s ease-out}
+
+/* tables and chips */
+.tt{width:100%;border-collapse:separate;border-spacing:0 6px;text-align:center}
+.tt th{font:600 13px var(--font-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:0 4px 2px}
+.tt td{padding:6px 4px;background:var(--bg)}
+.tt td:first-child{border-radius:14px 0 0 14px}
+.tt td:last-child{border-radius:0 14px 14px 0}
+.tt tr[data-act]{cursor:pointer}
+.tt tr.cur td{background:var(--surface-2);box-shadow:inset 0 2px 0 var(--ink),inset 0 -2px 0 var(--ink)}
+.tt tr.cur td:first-child{box-shadow:inset 0 2px 0 var(--ink),inset 0 -2px 0 var(--ink),inset 2px 0 0 var(--ink)}
+.tt tr.cur td:last-child{box-shadow:inset 0 2px 0 var(--ink),inset 0 -2px 0 var(--ink),inset -2px 0 0 var(--ink)}
+.bit{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;font:700 18px var(--font-display)}
+.bit.in1{background:var(--wire-on);color:var(--on-ink)}
+.bit.in0{background:var(--track);color:var(--ink)}
+.bit.o1{background:var(--lamp);color:var(--on-ink)}
+.bit.o0{background:var(--lamp-off);color:var(--muted)}
+.bit.q{border:2px dashed var(--muted);color:var(--muted);background:transparent}
+.bit.wrong{outline:3px solid var(--bad);outline-offset:2px}
+.same{font:700 22px var(--font-display)}
+.same.y{color:var(--good)}.same.n{color:var(--bad)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:8px;border:2px solid var(--ink);background:var(--surface);border-radius:999px;padding:8px 16px 8px 10px;min-height:46px;font:600 17px var(--font-display);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--surface-2);box-shadow:inset 0 0 0 2px var(--ink)}
+.chip.fixed{cursor:default}
+.eq{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:center;text-align:center}
+.eq .lab{display:block;font:600 12px var(--font-display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.eq b{font:600 18px/1.2 var(--font-display);overflow-wrap:anywhere}
+.eq .mid{font:700 30px var(--font-display)}
+.eq .mid.y{color:var(--good)}.eq .mid.n{color:var(--bad)}
+.rule{font:600 19px/1.3 var(--font-display);margin:0}
+.readout{font:700 36px/1.1 var(--font-display);text-align:center;letter-spacing:.02em}
+.readout small{display:block;font:400 16px var(--font-body);color:var(--muted);letter-spacing:0;margin-top:6px}
+.sub2{font:600 13px var(--font-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}
+.sub2:first-of-type{margin-top:0}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.hint{background:var(--surface-2);border-radius:16px;padding:12px 14px;margin:0}
+.win{border:3px solid var(--good);background:var(--surface);border-radius:24px;padding:16px 18px;display:grid;gap:10px;animation:pop .35s ease-out}
+.win h2{font:700 26px/1.1 var(--font-display);margin:0;color:var(--ink);text-wrap:balance}
+.win p{margin:0}
+.name b{font:700 20px var(--font-display);background:var(--lamp);color:var(--on-ink);border-radius:999px;padding:2px 12px}
+.law{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 12px;background:var(--surface-2);border-radius:18px;padding:12px;font:600 19px/1.2 var(--font-display);text-align:center}
+.law i{font-style:normal;font-size:28px;color:var(--good)}
+.tip{color:var(--muted)}
+.found{display:grid;gap:8px}
+.found .big{font:700 30px/1.1 var(--font-display)}
+.twins{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.twins .chip{font-size:15px;min-height:42px;padding:8px 14px}
+
+/* drag and drop */
+[data-drag],g[data-act="sw"],g[data-act="bub"][aria-pressed="true"],g[data-act="sock"]{touch-action:none;-webkit-user-select:none;user-select:none}
+[data-drag],g[data-act="sw"],g[data-act="bub"][aria-pressed="true"],g[data-act="sock"][data-filled="true"]{cursor:grab}
+.gicon{width:42px;height:34px;flex:none}
+.gicon .gs,.gicon .gs2{stroke-width:7}
+.gicon .bub{stroke-width:3}
+.tokchip .gicon{width:30px}
+.gate-zone{fill:transparent;stroke:none}
+.slot{fill:var(--surface-2);stroke:var(--muted);stroke-width:3;stroke-dasharray:7 5}
+.slotlbl{font:600 16px var(--font-display);fill:var(--muted)}
+.dg-gate .slot{stroke:var(--focus)}
+.gate-zone.hot+.slot{fill:var(--bubble)}
+.dg-gate .gate-zone{stroke:var(--focus);stroke-width:3;stroke-dasharray:6 5}
+.dg-gate .gate-zone.hot{fill:var(--surface-2)}
+.dg-bubble .bubslot,.dg-tok .sockring{stroke:var(--focus);stroke-width:3}
+.hot .bubslot,.hot .bub,.hot .sockring{stroke:var(--focus);stroke-width:4}
+.hot .bubslot,.hot .sockring{fill:var(--bubble)}
+body.dragging{-webkit-user-select:none;user-select:none;cursor:grabbing}
+.dragghost{position:fixed;left:0;top:0;z-index:50;pointer-events:none;width:64px;height:52px;margin:-26px 0 0 -32px}
+.dragghost svg{width:100%;height:100%;filter:drop-shadow(0 6px 6px rgba(0,0,0,.28))}
+.dragghost .gs,.dragghost .gs2{stroke-width:5}
+
+/* map */
+.world{display:grid;gap:10px}
+.world h2{font:700 24px var(--font-display);margin:6px 0 0;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}
+.world h2 span{font:600 17px var(--font-body);color:var(--muted)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.tile{position:relative;display:grid;gap:2px;text-align:left;background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:12px 14px;min-height:92px;cursor:pointer}
+.tile .num{font:700 30px/1 var(--font-display)}
+.tile .tn{font-size:15px;color:var(--muted)}
+.tile.done{border-color:var(--good)}
+.tile .ck{position:absolute;right:12px;top:10px;font:700 20px var(--font-display);color:var(--good)}
+.sub{margin:4px 0 0;color:var(--muted)}
+
+@keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+@keyframes nudge{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap" id="app"></div>
+
+<script>
+const GATES={AND:(a,b)=>a&&b,OR:(a,b)=>a||b,XOR:(a,b)=>a!==b};
+const base={n:2,g:'AND',bA:false,bB:false,bO:false};
+const C=o=>Object.assign({},base,o);
+const COL={AND:'var(--and)',OR:'var(--or)',XOR:'var(--xor)',NOT:'var(--not)'};
+const SHAPES={
+  AND:{d:'M34,-48 H69 A48,48 0 0 1 69,48 H34 Z',tip:117,fx:72},
+  OR:{d:'M34,-48 H56 C91,-48 111,-25 124,0 C111,25 91,48 56,48 H34 C51,25 51,-25 34,-48 Z',tip:124,fx:80},
+  XOR:{d:'M34,-48 H56 C91,-48 111,-25 124,0 C111,25 91,48 56,48 H34 C51,25 51,-25 34,-48 Z',tip:124,fx:82},
+  NOT:{d:'M34,-42 L34,42 L106,0 Z',tip:106,fx:57}
+};
+const WORLDS=['Meet the gates','NOT tricks',"De Morgan’s mirror",'Real-life logic','Computer parts','Free play'];
+const RULE='De Morgan’s trick: flip every NOT (add it or remove it), then swap AND and OR. The circuit still does the same job.';
+const ALLNOT={gates:['AND','OR','XOR'],bA:false,bB:false,bO:false};
+
+const LEVELS=[
+ {w:0,t:'Switch and lamp',kind:'explore',pal:{g:'LAMP'},c:C({n:1,g:'WIRE'}),
+  say:'Tap the switch to send power to the lamp. ON is 1 and OFF is 0. Try both!',
+  hint:'Tap the switch once. Each new row in the table fills in.',
+  win:{h:'The lamp copies the switch',p:'Switch ON is 1 and the lamp glows. Switch OFF is 0 and the lamp stays dark. Now meet the gates. They change the answer!'}},
+ {w:0,t:'The NOT gate',kind:'explore',pal:{g:'NOT'},c:C({n:1,g:'NOT'}),
+  say:'Hi, I am Nina NOT. I flip everything! Try both switch settings.',
+  hint:'Tap the switch to try 1, then tap again to try 0.',
+  win:{h:'NOT flips it',p:'When the switch is 1 the lamp is 0, and when the switch is 0 the lamp is 1. The little yellow circle is a NOT. It flips the signal.',name:'NOT'}},
+ {w:0,t:'The AND gate',kind:'explore',pal:{g:'AND'},c:C({g:'AND'}),
+  say:'I am Andy AND. I am picky! Try all four ways to set the switches.',
+  hint:'You can also tap a row in the table to set the switches for you.',
+  win:{h:'AND wants both',p:'The lamp lights only when A and B are both 1. Everybody has to say yes.',name:'AND'}},
+ {w:0,t:'The OR gate',kind:'explore',pal:{g:'OR'},c:C({g:'OR'}),
+  say:'I am Orla OR. I am easy to please! Try all four ways.',
+  hint:'Tap a row in the table to set the switches for you.',
+  win:{h:'OR needs just one',p:'The lamp lights when A or B or both are 1. It stays dark only when both are 0.',name:'OR'}},
+
+ {w:1,t:'Spy gate',kind:'build',hidden:true,pal:{g:'SPY'},target:C({g:'OR'}),start:'AND',
+  allow:{gates:['AND','OR'],bA:false,bB:false,bO:false},
+  say:'A secret gate hides in the box! Test all four switch settings, then drag the gate that acts the same onto the gate spot.',
+  hint:'Turn only one switch ON. If the secret lamp lights up, the secret gate is not AND.',
+  win:{h:'Case closed!',p:'You cracked it. The secret gate was OR, and your gate matches it on every row.'}},
+ {w:1,t:'The NAND gate',kind:'explore',pal:{g:'AND',bO:true},c:C({g:'AND',bO:true}),
+  say:'Look, Andy has a NOT on his nose! A NOT flips the answer. What does the lamp do now?',
+  hint:'Tap a row in the table to set the switches for you.',
+  win:{h:'A NOT flips AND',p:'AND with a NOT on the end is NAND, short for NOT AND. It does the opposite of AND, so it is dark only when both switches are 1.',name:'NAND'}},
+ {w:1,t:'The NOR gate',kind:'explore',pal:{g:'OR',bO:true},c:C({g:'OR',bO:true}),
+  say:'Now Orla got a NOT too. Test all four!',
+  hint:'Tap a row in the table to set the switches for you.',
+  win:{h:'A NOT flips OR',p:'OR with a NOT on the end is NOR, short for NOT OR. It lights up only when both switches are 0.',name:'NOR'}},
+ {w:1,t:'The XOR gate',kind:'explore',pal:{g:'XOR'},c:C({g:'XOR'}),
+  say:'I am Xavi XOR. I love being different! Try all four.',
+  hint:'Tap a row in the table to set the switches for you.',
+  win:{h:'XOR likes different',p:'The lamp lights when exactly one switch is 1. When both switches match, it stays dark.',name:'XOR'}},
+
+ {w:2,t:'Twin of NAND',kind:'build',pal:{g:'OR'},target:C({g:'AND',bO:true}),start:'AND',
+  allow:{gates:['AND','OR'],bA:true,bB:true,bO:false},
+  say:'The top circuit is NAND. Build a twin below that always acts the same. You may not put a NOT on the way out!',
+  hint:'Drag a NOT onto each input circle. Then drag the OR gate onto the gate spot.',
+  win:{h:'Twins!',p:'Your circuit and NAND give the same answer on every row.',law:{l:'NOT (A AND B)',r:'NOT A OR NOT B',tip:RULE}}},
+ {w:2,t:'Twin of NOR',kind:'build',pal:{g:'AND'},target:C({g:'OR',bO:true}),start:'OR',
+  allow:{gates:['AND','OR'],bA:true,bB:true,bO:false},
+  say:'Same game with NOR. No NOT on the way out. Can you find the twin?',
+  hint:'NOTs on both inputs again, but this time you need an AND gate.',
+  win:{h:'Another twin pair!',p:'NOR and your circuit match on every row.',law:{l:'NOT (A OR B)',r:'NOT A AND NOT B',tip:RULE}}},
+ {w:2,t:'AND from an OR',kind:'build',pal:{g:'OR',bO:true},target:C({g:'AND'}),start:'OR',
+  allow:{gates:['OR'],bA:true,bB:true,bO:true},
+  say:'Now the other way around. Build AND using only an OR gate and NOTs.',
+  hint:'You only have OR. Put a NOT on both inputs and on the way out.',
+  win:{h:'AND from an OR gate!',p:'The law works in both directions, so NOTs can turn OR into AND.',law:{l:'A AND B',r:'NOT (NOT A OR NOT B)',tip:RULE}}},
+ {w:2,t:'OR from an AND',kind:'build',pal:{g:'AND',bO:true},target:C({g:'OR'}),start:'AND',
+  allow:{gates:['AND'],bA:true,bB:true,bO:true},
+  say:'Build OR using only an AND gate and NOTs.',
+  hint:'You only have AND. Put a NOT on both inputs and on the way out.',
+  win:{h:'OR from an AND gate!',p:'You can build OR out of AND, because NOTs flip the answers.',law:{l:'A OR B',r:'NOT (NOT A AND NOT B)',tip:RULE}}},
+ {w:2,t:'A but not B',kind:'build',pal:{g:'OR',bO:true},target:C({g:'AND',bB:true}),start:'OR',
+  allow:{gates:['OR'],bA:true,bB:true,bO:true},
+  say:'Boss level! The target lights only when A is 1 and B is 0. You only have an OR gate. Watch which side gets a NOT.',
+  hint:'Try a NOT on input A and on the output. Leave B alone.',
+  win:{h:'Boss beaten!',p:'Flipping every NOT and swapping the gate gave you a perfect twin, even with a mixed circuit.',law:{l:'A AND NOT B',r:'NOT (NOT A OR B)',tip:RULE}}},
+
+ {w:3,t:'Door alarm',kind:'build',pal:{g:'AND'},target:C({g:'AND'}),start:'OR',
+  story:{sa:'Door',sb:'Night',out:'Alarm',rule:'The alarm rings when the door is open and it is night.'},
+  allow:ALLNOT,
+  say:'Help, we need an alarm! Switch A is the door (ON means open). Switch B is night time. Make the lamp follow the rule.',
+  hint:'Which gate says “both”?',
+  win:{h:'The alarm works!',p:'AND rings the alarm only when the door is open and it is night. Real alarms use gates just like this.'}},
+ {w:3,t:'Sprinkler',kind:'build',pal:{g:'AND',bO:true},target:C({g:'AND',bB:true}),start:'AND',
+  story:{sa:'Dry',sb:'Rain',out:'Sprinkler',rule:'Water the garden when the soil is dry and it is not raining.'},
+  allow:{gates:['AND','OR'],bA:true,bB:true,bO:true},
+  say:'Water the garden, but never when it rains! Switch A says the soil is dry. Switch B says it is raining.',
+  hint:'Rain should turn the sprinkler off. Which input needs a NOT?',
+  win:{h:'Happy garden!',p:'A NOT on the rain switch turns rain into “no rain”. There is a second answer that uses an OR gate. Tap Start over and see if you can find it.'}},
+ {w:3,t:'Pet shop door',kind:'build',pal:{g:'OR',bO:true},target:C({g:'OR',bO:true}),start:'AND',
+  story:{sa:'Cat',sb:'Dog',out:'Door opens',rule:'The pet shop door opens only when there is no cat and no dog.'},
+  allow:{gates:['AND','OR'],bA:true,bB:true,bO:true},
+  say:'The shop door must stay shut if a cat or a dog is waiting. Switch A is a cat. Switch B is a dog.',
+  hint:'You can do it with an OR gate and one NOT. There is a twin with an AND gate too!',
+  win:{h:'Door fixed!',p:'“Not (cat or dog)” means the same as “no cat and no dog”. Both circuits do the job.',law:{l:'NOT (Cat OR Dog)',r:'NOT Cat AND NOT Dog',tip:RULE}}},
+
+ {w:4,t:'Adding with gates',kind:'adder',pal:{g:'XOR'},c1:C({g:'XOR'}),c2:C({g:'AND'}),
+  say:'Computers add with gates! A and B are the two numbers, 0 or 1. Two lamps show the answer in binary. Try 1 + 1.',
+  hint:'Look at the big sum under the circuit. Try all four switch settings.',
+  win:{h:'1 + 1 = 10',p:'In binary, 1 + 1 makes 10. The carry lamp is the left digit and the sum lamp is the right digit. XOR makes the sum and AND makes the carry.',name:'half adder',lead:'This circuit is called a'}},
+ {w:4,t:'Build the adder',kind:'adderb',pal:{g:'XOR'},target:{sum:C({g:'XOR'}),carry:C({g:'AND'})},start:['AND','OR'],
+  allow:{gates:['AND','OR','XOR'],bA:true,bB:true,bO:true},
+  say:'Now build the half adder yourself! The top lamp is SUM and the bottom lamp is CARRY. Pick a gate for each.',
+  hint:'SUM lights when exactly one switch is on. CARRY lights only when both are on.',
+  win:{h:'You built an adder!',p:'XOR for the sum and AND for the carry. Chain lots of these together and a computer can add big numbers.'}},
+ {w:4,t:'NOT from NAND',kind:'nand',inputs:1,nands:1,fn:a=>!a,pal:{g:'AND',bO:true},
+  say:'NAND is a super gate: every other gate can be built from NANDs! First make a NOT. Drag the plug for switch A into both sockets.',
+  hint:'Put plug A in both sockets of the NAND.',
+  win:{h:'NOT from a NAND!',p:'When both sockets get the same signal, a NAND just flips it. That is a NOT.'}},
+ {w:4,t:'AND from NAND',kind:'nand',inputs:2,nands:2,fn:(a,b)=>a&&b,pal:{g:'AND',bO:true},
+  say:'Now make AND from two NANDs. A NAND is an AND with a NOT, so you need one more NOT to cancel it.',
+  hint:'NAND 1 gets A and B. NAND 2 gets the output of NAND 1 in both sockets.',
+  win:{h:'AND from NANDs!',p:'The first NAND makes NOT AND. The second one flips it back with the tied-together trick, so you get plain AND.'}},
+ {w:4,t:'OR from NAND',kind:'nand',inputs:2,nands:3,fn:(a,b)=>a||b,pal:{g:'AND',bO:true},
+  say:'Last one! Make OR from three NANDs. Remember De Morgan: A OR B is the same as NOT (NOT A AND NOT B).',
+  hint:'Make NOT A in NAND 1 and NOT B in NAND 2. Then plug both outputs into NAND 3.',
+  win:{h:'Every gate from NANDs!',p:'You built NOT, AND and OR from nothing but NAND. That is why chip makers love NAND.',law:{l:'A OR B',r:'NOT (NOT A AND NOT B)',tip:'NAND 1 and NAND 2 are the two NOTs. NAND 3 does the NOT AND.'}}},
+
+ {w:5,t:'Playground',kind:'sandbox',pal:{g:'XOR'},start:'AND',
+  allow:{gates:['AND','OR','XOR'],bA:true,bB:true,bO:true},
+  say:'Build anything you like! I will tell you its name and show all its twins.',
+  hint:'Try the De Morgan button. It flips every NOT and swaps AND and OR for you.'}
+];
+
+/* ---------- logic ---------- */
+function sg(c,a,b){
+  if(c.n===1){const z=c.g==='NOT'?!a:a;return {a,x:a,z,o:z};}
+  const x=c.bA?!a:a, y=c.bB?!b:b;
+  if(!c.g)return {a,b,x,y,z:false,o:false};
+  const z=GATES[c.g](x,y);
+  return {a,b,x,y,z,o:c.bO?!z:z};
+}
+function ev(c,a,b){return sg(c,a,b).o;}
+function rowAB(n,r){return n===1?{a:r===1,b:false}:{a:r>=2,b:r%2===1};}
+function sigOf(c){let s='';for(let r=0;r<4;r++){const q=rowAB(2,r);s+=ev(c,q.a,q.b)?'1':'0';}return s;}
+function formula(c,na='A',nb='B'){
+  if(c.n===1)return c.g==='NOT'?'NOT '+na:na;
+  if(!c.g)return '? gate';
+  const inner=(c.bA?'NOT '+na:na)+' '+c.g+' '+(c.bB?'NOT '+nb:nb);
+  return c.bO?'NOT ('+inner+')':inner;
+}
+const NAMES={'0000':'Never lights','0001':'AND','0010':'A AND NOT B','0011':'Copies switch A','0100':'NOT A AND B','0101':'Copies switch B','0110':'XOR','0111':'OR','1000':'NOR','1001':'XNOR (lights when the same)','1010':'NOT B','1011':'A OR NOT B','1100':'NOT A','1101':'NOT A OR B','1110':'NAND','1111':'Always lights'};
+function twinsOf(c){
+  const out=[],seen=new Set([formula(c)]),sig=sigOf(c);
+  for(const g of ['AND','OR','XOR'])for(let m=0;m<8;m++){
+    const t=C({g,bA:!!(m&1),bB:!!(m&2),bO:!!(m&4)});
+    const f=formula(t);
+    if(sigOf(t)===sig&&!seen.has(f)){seen.add(f);out.push(t);}
+  }
+  return out;
+}
+function deMorgan(c){
+  if(c.g==='XOR')return null;
+  return C({g:c.g==='AND'?'OR':'AND',bA:!c.bA,bB:!c.bB,bO:!c.bO});
+}
+/* NAND plug board: nd[i]=[ref,ref], ref is null, 'A', 'B' or 'N1','N2' (output of an earlier NAND) */
+function ndEval(nd,a,b){
+  const outs=[],vals=[];
+  const val=r=>r==='A'?a:r==='B'?b:(r&&r[0]==='N')?outs[+r.slice(1)-1]:false;
+  nd.forEach(g=>{const x=!!val(g[0]),y=!!val(g[1]);vals.push([x,y]);outs.push(g[0]!=null&&g[1]!=null?!(x&&y):false);});
+  return {outs,vals,o:outs[outs.length-1]};
+}
+function refsFor(L,gi){
+  const r=['A'];if(L.inputs===2)r.push('B');
+  for(let j=0;j<gi;j++)r.push('N'+(j+1));
+  return r;
+}
+
+/* ---------- state ---------- */
+const S={lvl:0,view:'play',a:false,b:false,p:C({}),q:null,nd:null,seen:new Set([0]),won:false,hint:false,fresh:false};
+const cc=id=>id==='q'?S.q:S.p;
+const isExp=L=>L.kind==='explore'||L.kind==='adder';
+let done=new Set();
+const KEY='bubblegates.done.v2';
+try{JSON.parse(localStorage.getItem(KEY)||'[]').forEach(i=>done.add(i));}catch(e){}
+function saveDone(){try{localStorage.setItem(KEY,JSON.stringify([...done]));}catch(e){}}
+const curRow=()=>S.p.n===1?(S.a?1:0):((S.a?2:0)+(S.b?1:0));
+const rowsN=()=>S.p.n===1?2:4;
+function matches(L){
+  if(L.kind==='nand'){
+    if(S.nd.some(g=>g[0]==null||g[1]==null))return false;
+    for(let r=0;r<(L.inputs===1?2:4);r++){const q=rowAB(L.inputs,r);if(ndEval(S.nd,q.a,q.b).o!==L.fn(q.a,q.b))return false;}
+    return true;
+  }
+  for(let r=0;r<4;r++){
+    const q=rowAB(2,r);
+    if(L.kind==='adderb'){if(ev(S.p,q.a,q.b)!==ev(L.target.sum,q.a,q.b)||ev(S.q,q.a,q.b)!==ev(L.target.carry,q.a,q.b))return false;}
+    else if(ev(L.target,q.a,q.b)!==ev(S.p,q.a,q.b))return false;
+  }
+  return true;
+}
+const tgtVal=(L,a,b)=>L.kind==='nand'?L.fn(a,b):ev(L.target,a,b);
+const yourVal=(L,a,b)=>L.kind==='nand'?ndEval(S.nd,a,b).o:ev(S.p,a,b);
+
+function startLevel(i,quiet){
+  const L=LEVELS[i];
+  S.lvl=i;S.view='play';S.a=false;S.b=false;S.won=false;S.hint=false;S.fresh=false;
+  S.q=null;S.nd=null;
+  if(L.kind==='explore')S.p=C(L.c);
+  else if(L.kind==='adder'){S.p=C(L.c1);S.q=C(L.c2);}
+  else if(L.kind==='adderb'){S.p=C({g:null});S.q=C({g:null});}
+  else if(L.kind==='nand'){S.p=C({n:L.inputs});S.nd=Array.from({length:L.nands},()=>[null,null]);}
+  else S.p=C({g:L.kind==='sandbox'?L.start:null});
+  S.seen=new Set([0]);
+  if(L.kind==='sandbox'){done.add(i);saveDone();}
+  render();
+  if(!quiet)window.scrollTo(0,0);
+}
+function afterChange(){
+  const L=LEVELS[S.lvl];
+  S.seen.add(curRow());
+  if(!S.won&&L.kind!=='sandbox'){
+    const ok=isExp(L)?S.seen.size===rowsN():(matches(L)&&(!L.hidden||S.seen.size===4));
+    if(ok){S.won=true;S.fresh=true;done.add(S.lvl);saveDone();}
+  }
+  render();
+  if(S.fresh){S.fresh=false;const w=document.querySelector('.win');if(w)setTimeout(()=>w.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest'}),60);}
+}
+
+/* ---------- drawing ---------- */
+const wire=(d,on)=>`<path class="wire ${on?'on':'off'}" d="${d}"/>`;
+const wireG=(d,on)=>`<path class="wireg ${on?'on':'off'}" d="${d}"/>`;
+function face(cx,on){
+  const eyes=on
+    ?`<circle cx="${cx-11}" cy="-7" r="6" fill="#fff"/><circle cx="${cx+11}" cy="-7" r="6" fill="#fff"/><circle cx="${cx-10}" cy="-6" r="3" fill="#16204A"/><circle cx="${cx+12}" cy="-6" r="3" fill="#16204A"/>`
+    :`<path d="M${cx-17},-6 H${cx-6} M${cx+6},-6 H${cx+17}" fill="none" stroke="#16204A" stroke-width="3" stroke-linecap="round"/>`;
+  const mouth=on
+    ?`<path d="M${cx-8},8 Q${cx},19 ${cx+8},8" fill="none" stroke="#16204A" stroke-width="3" stroke-linecap="round"/>`
+    :`<path d="M${cx-6},12 H${cx+6}" fill="none" stroke="#16204A" stroke-width="3" stroke-linecap="round"/>`;
+  return eyes+mouth;
+}
+function lampSVG(on){
+  let rays='';
+  if(on)for(let k=0;k<8;k++){const t=k*Math.PI/4,c=Math.cos(t),s=Math.sin(t);rays+=`<line x1="${(27*c).toFixed(1)}" y1="${(27*s).toFixed(1)}" x2="${(37*c).toFixed(1)}" y2="${(37*s).toFixed(1)}" stroke="var(--lamp)" stroke-width="4" stroke-linecap="round"/>`;}
+  return `<g class="lamp ${on?'on':''}">${on?`<circle r="34" fill="var(--lamp)" opacity=".28"/>${rays}`:''}
+  <rect x="-9" y="15" width="18" height="13" rx="3" fill="var(--muted)" stroke="var(--ink)" stroke-width="2.5"/>
+  <circle class="bulb" r="20" fill="${on?'var(--lamp)':'var(--lamp-off)'}" stroke="var(--ink)" stroke-width="3"/>
+  <path d="M-7,7 L-3,-4 L1,4 L5,-4 L8,7" fill="none" stroke="${on?'#16204A':'var(--muted)'}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+}
+function bubbleBtn(x,y,key,on,editable,label,id='p'){
+  const vis=on?`<circle cx="${x}" cy="${y}" r="7.5" class="bub"/>`:`<circle cx="${x}" cy="${y}" r="7.5" class="bubslot"/>`;
+  if(!editable)return on?vis:'';
+  return `<g data-act="bub" data-c="${id}" data-k="${key}" data-fid="bub-${id}-${key}" tabindex="0" role="button" aria-pressed="${on}" aria-label="NOT on ${label}"><circle cx="${x}" cy="${y}" r="19" class="hit"/>${vis}</g>`;
+}
+function circ(c,o){
+  const v=sg(c,o.a,o.b),W=183,al=o.allow||{},ed=!!o.edit,id=o.id||'p';
+  let h=`<g transform="translate(${o.ox},${o.oy}) scale(${o.s})">`;
+  if(c.n===1){
+    if(c.g==='WIRE')h+=wire(`M0,0 H${W}`,v.o);
+    else{
+      const sh=SHAPES.NOT;
+      h+=wire('M0,0 H40',v.a)+wire(`M${sh.tip+15},0 H${W}`,v.o);
+      h+=`<path d="${sh.d}" fill="${COL.NOT}" class="gs"/>`+face(sh.fx,v.o)+bubbleBtn(sh.tip+8,0,'bO',true,false,'output');
+    }
+  }else if(o.hidden){
+    h+=wire('M0,-28 H34',v.a)+wire('M0,28 H34',v.b)+wire(`M118,0 H${W}`,v.o);
+    h+=`<rect x="34" y="-48" width="84" height="96" rx="20" class="mystery"/><text x="76" y="19" text-anchor="middle" class="qmark">?</text>`;
+  }else{
+    const sh=SHAPES[c.g||'AND'],tip=sh.tip,empty=!c.g;
+    const ins=[{y:-28,k:'bA',raw:v.a,aft:v.x,nm:'A'},{y:28,k:'bB',raw:v.b,aft:v.y,nm:'B'}];
+    let top='';
+    for(const i of ins){
+      if(c[i.k]){h+=wire(`M0,${i.y} H7`,i.raw)+wire(`M21,${i.y} H46`,i.aft);top+=bubbleBtn(14,i.y,i.k,true,ed&&al[i.k],'input '+i.nm,id);}
+      else{h+=wire(`M0,${i.y} H46`,i.raw);if(ed&&al[i.k])top+=bubbleBtn(14,i.y,i.k,false,true,'input '+i.nm,id);}
+    }
+    if(c.bO){h+=wire(`M${tip},0 H${tip+2}`,v.z)+wire(`M${tip+15},0 H${W}`,v.o);top+=bubbleBtn(tip+8,0,'bO',true,ed&&al.bO,'the output',id);}
+    else{h+=wire(`M${tip},0 H${W}`,v.z);if(ed&&al.bO)top+=bubbleBtn(tip+8,0,'bO',false,true,'the output',id);}
+    const zone=ed&&al.gates&&al.gates.length>=1?`<rect class="gate-zone" data-drop="gate" data-c="${id}" x="26" y="-54" width="104" height="108" rx="22"/>`:'';
+    h+=zone+(empty?`<rect x="34" y="-48" width="83" height="96" rx="22" class="slot"/><text x="76" y="6" text-anchor="middle" class="slotlbl">gate</text>`:`<path d="${sh.d}" fill="${COL[c.g]}" class="gs"/>`+(c.g==='XOR'?'<path d="M24,-48 C41,-25 41,25 24,48" class="gs2"/>':'')+face(sh.fx,v.o))+top;
+  }
+  h+=`<g transform="translate(205,0)">${lampSVG(v.o)}</g></g>`;
+  return h;
+}
+function sw(key,label,x,y,on){
+  const tx=on?'var(--on-ink)':'var(--ink)';
+  return `<g data-act="sw" data-k="${key}" data-fid="sw-${key}" tabindex="0" role="switch" aria-checked="${on}" aria-label="Switch ${label}, ${on?'on':'off'}">
+  <rect class="hit" x="${x-35}" y="${y-23}" width="70" height="46" rx="16"/>
+  <rect x="${x-31}" y="${y-18}" width="62" height="36" rx="18" fill="${on?'var(--wire-on)':'var(--track)'}" stroke="var(--ink)" stroke-width="3"/>
+  <text x="${on?x-13:x+13}" y="${y+5.5}" text-anchor="middle" class="swtxt" fill="${tx}">${on?1:0}</text>
+  <circle class="knob" cx="${on?x+13:x-13}" cy="${y}" r="13" fill="var(--surface)" stroke="var(--ink)" stroke-width="3"/>
+  <text class="swlbl knob" x="${on?x+13:x-13}" y="${y+5.5}" text-anchor="middle">${label}</text></g>`;
+}
+function stageSingle(L){
+  const p=S.p,a=S.a,b=S.b,st=L.story,ed=L.kind==='sandbox'||!!st,ox=104;
+  let s=`<svg viewBox="${p.n===1?'0 32 360 136':'0 0 360 200'}" role="group" aria-label="Circuit with switches and a lamp">`;
+  if(p.n===1)s+=wireG(`M74,100 H${ox}`,a)+sw('a','A',43,100,a);
+  else s+=wireG(`M74,72 H${ox}`,a)+wireG(`M74,128 H${ox}`,b)+sw('a','A',43,72,a)+sw('b','B',43,128,b);
+  s+=circ(p,{ox,oy:100,s:1,a,b,edit:ed,allow:L.allow});
+  if(st)s+=`<text x="12" y="46" class="tag">${st.sa.toUpperCase()}</text><text x="12" y="104" class="tag">${st.sb.toUpperCase()}</text><text x="309" y="152" text-anchor="middle" class="tag">${st.out.toUpperCase()}</text>`;
+  return s+'</svg>';
+}
+function stageTwo(L,T,P,verdict){
+  const a=S.a,b=S.b,s=.8,ox=112,oT=62,oP=196,k=28*s;
+  const t1=oT-k,t2=oT+k,p1=oP-k,p2=oP+k;
+  let m='<svg viewBox="0 0 360 252" role="group" aria-label="Two circuits sharing two switches">';
+  m+=wireG('M74,108 H86',a)+wireG(`M86,${t1} V${p1}`,a)+wireG(`M86,${t1} H${ox}`,a)+wireG(`M86,${p1} H92 a4,4 0 0 1 8,0 H${ox}`,a);
+  m+=wireG('M74,152 H82 a4,4 0 0 1 8,0 H96',b)+wireG(`M96,${t2} V${p2}`,b)+wireG(`M96,${t2} H${ox}`,b)+wireG(`M96,${p2} H${ox}`,b);
+  m+=`<circle cx="86" cy="108" r="4" fill="var(--ink)"/><circle cx="96" cy="152" r="4" fill="var(--ink)"/>`;
+  m+=sw('a','A',43,108,a)+sw('b','B',43,152,b);
+  m+=`<text x="${ox}" y="13" class="tag">${T.label}</text><text x="${ox}" y="147" class="tag">${P.label}</text>`;
+  m+=circ(T.c,{ox,oy:oT,s,a,b,hidden:T.hidden,edit:T.edit,id:T.id,allow:L.allow});
+  m+=circ(P.c,{ox,oy:oP,s,a,b,edit:P.edit,id:P.id,allow:L.allow});
+  if(verdict){
+    const same=ev(T.c,a,b)===ev(P.c,a,b);
+    m+=`<g transform="translate(276,129)"><circle r="17" fill="var(--surface)" stroke="${same?'var(--good)':'var(--bad)'}" stroke-width="3"/><text y="7" text-anchor="middle" class="verdict" fill="${same?'var(--good)':'var(--bad)'}">${same?'=':'≠'}</text></g>`;
+  }
+  return m+'</svg>';
+}
+const stageMirror=L=>stageTwo(L,{c:L.target,id:'t',edit:false,hidden:L.hidden,label:'TARGET'},{c:S.p,id:'p',edit:true,label:'YOURS'},true);
+const stageAdder=L=>stageTwo(L,{c:S.p,id:'p',edit:L.kind==='adderb',label:'SUM'},{c:S.q,id:'q',edit:L.kind==='adderb',label:'CARRY'},false);
+
+/* NAND plug board */
+const tokFill=(r,on)=>on?(r[0]==='N'?'var(--xor)':'var(--wire-on)'):'var(--track)';
+function tokIcon(r){
+  return `<svg class="gicon" viewBox="-14 -14 28 28" aria-hidden="true"><circle r="12" fill="${tokFill(r,true)}" class="tokc"/><text y="4.5" text-anchor="middle" class="toklbl" fill="var(--on-ink)">${r}</text></svg>`;
+}
+function nandGate(i,g,res,last,lay){
+  const nd=S.nd[i],sh=SHAPES.AND,tip=sh.tip,filled=nd[0]!=null&&nd[1]!=null,ov=!!res.outs[i];
+  let h=`<g transform="translate(${g.ox},${g.oy}) scale(${g.s})">`;
+  [-28,28].forEach((y,si)=>{h+=wire(`M20,${y} H46`,nd[si]!=null&&res.vals[i][si]);});
+  if(last)h+=wire(`M${tip+15},0 H${((lay.lamp.x-20*lay.lamp.s-g.ox)/g.s).toFixed(1)}`,ov);
+  else{
+    h+=wire(`M${tip+15},0 H${tip+26}`,ov);
+    h+=`<circle cx="${tip+38}" cy="0" r="13" fill="${tokFill('N',ov)}" class="tokc"/><text x="${tip+38}" y="5" text-anchor="middle" class="toklbl" fill="${ov?'var(--on-ink)':'var(--ink)'}">N${i+1}</text>`;
+  }
+  h+=`<path d="${sh.d}" fill="${COL.AND}" class="gs"/>`+face(sh.fx,filled&&ov)+`<circle cx="${tip+8}" cy="0" r="7.5" class="bub"/>`;
+  [-28,28].forEach((y,si)=>{
+    const ref=nd[si],on=ref!=null&&res.vals[i][si];
+    h+=`<g data-act="sock" data-gi="${i}" data-si="${si}" data-filled="${ref!=null}" data-fid="sock-${i}-${si}" tabindex="0" role="button" aria-label="Socket ${si+1} of NAND ${i+1}: ${ref||'empty'}"><circle cx="15" cy="${y}" r="24" class="hit"/>`
+      +(ref!=null?`<circle cx="15" cy="${y}" r="15" fill="${tokFill(ref,on)}" class="tokc"/><text x="15" y="${y+5}" text-anchor="middle" class="toklbl" fill="${on?'var(--on-ink)':'var(--ink)'}">${ref}</text>`:`<circle cx="15" cy="${y}" r="13" class="sockring"/>`)+'</g>';
+  });
+  return h+'</g>';
+}
+function stageNand(L){
+  const k=L.nands,a=S.a,b=S.b,res=ndEval(S.nd,a,b);
+  const lay=k===1?{h:200,g:[{ox:104,oy:100,s:1}],lamp:{x:305,y:100,s:1},sw:L.inputs===1?[[43,100]]:[[43,72],[43,128]]}
+    :k===2?{h:200,g:[{ox:86,oy:100,s:.72},{ox:214,oy:100,s:.72}],lamp:{x:334,y:100,s:.7},sw:[[43,72],[43,128]]}
+    :{h:240,g:[{ox:84,oy:62,s:.75},{ox:84,oy:178,s:.75},{ox:216,oy:120,s:.75}],lamp:{x:336,y:120,s:.7},sw:[[43,92],[43,148]]};
+  let s=`<svg viewBox="0 0 360 ${lay.h}" role="group" aria-label="NAND plug board with switches and a lamp">`;
+  s+=sw('a','A',lay.sw[0][0],lay.sw[0][1],a);
+  if(L.inputs===2)s+=sw('b','B',lay.sw[1][0],lay.sw[1][1],b);
+  lay.g.forEach((g,i)=>{s+=nandGate(i,g,res,i===k-1,lay);});
+  s+=`<g transform="translate(${lay.lamp.x},${lay.lamp.y}) scale(${lay.lamp.s})">${lampSVG(!!res.o)}</g>`;
+  return s+'</svg>';
+}
+function palSVG(p){
+  if(p.g==='LAMP')return `<svg class="pal" viewBox="-40 -42 80 76" aria-hidden="true">${lampSVG(true)}</svg>`;
+  if(p.g==='SPY')return `<svg class="pal" viewBox="28 -54 98 108" aria-hidden="true"><rect x="34" y="-48" width="84" height="96" rx="20" class="mystery"/><text x="76" y="19" text-anchor="middle" class="qmark">?</text></svg>`;
+  const sh=SHAPES[p.g];
+  return `<svg class="pal" viewBox="20 -54 126 108" aria-hidden="true"><path d="${sh.d}" fill="${COL[p.g]}" class="gs"/>${p.g==='XOR'?'<path d="M24,-48 C41,-25 41,25 24,48" class="gs2"/>':''}${face(sh.fx,true)}${p.bO?`<circle cx="${sh.tip+8}" cy="0" r="7.5" class="bub"/>`:''}${p.g==='NOT'?`<circle cx="${sh.tip+8}" cy="0" r="7.5" class="bub"/>`:''}</svg>`;
+}
+const LOGO=`<svg viewBox="20 -54 126 108" aria-hidden="true"><path d="${SHAPES.AND.d}" fill="var(--and)" class="gs"/>${face(72,true)}<circle cx="125" cy="0" r="7.5" class="bub"/></svg>`;
+
+/* ---------- html pieces ---------- */
+const bit=(v,k,x='')=>`<span class="bit ${k}${v?1:0}${x}">${v?1:0}</span>`;
+function tableHTML(L){
+  if(L.kind==='adder'||L.kind==='adderb')return adderTable(L);
+  const n=S.p.n,rows=rowsN(),cur=curRow(),st=L.story,build=L.kind==='build'||L.kind==='nand';
+  let th=`<th scope="col">${st?st.sa:'A'}</th>`+(n===2?`<th scope="col">${st?st.sb:'B'}</th>`:'');
+  th+=build?`<th scope="col">${st?'Wanted':'Target'}</th><th scope="col">Yours</th><th scope="col"><span class="sr">Same?</span></th>`:'<th scope="col">Lamp</th>';
+  let b='';
+  for(let r=0;r<rows;r++){
+    const q=rowAB(n,r),known=L.kind==='sandbox'||S.seen.has(r);
+    let cells=`<td>${bit(q.a,'in')}</td>`+(n===2?`<td>${bit(q.b,'in')}</td>`:'');
+    if(build){
+      const t=tgtVal(L,q.a,q.b),y=yourVal(L,q.a,q.b),tk=!L.hidden||S.seen.has(r);
+      cells+=`<td>${tk?bit(t,'o'):'<span class="bit q" aria-label="not tested yet">?</span>'}</td><td>${bit(y,'o')}</td>`;
+      cells+=`<td>${tk?(t===y?'<span class="same y" aria-label="same">✓</span>':'<span class="same n" aria-label="different">✗</span>'):''}</td>`;
+    }else cells+=`<td>${known?bit(ev(S.p,q.a,q.b),'o'):'<span class="bit q" aria-label="not tried yet">?</span>'}</td>`;
+    b+=`<tr data-act="row" data-r="${r}" class="${r===cur?'cur':''}" title="Tap to set the switches">${cells}</tr>`;
+  }
+  return `<table class="tt"><caption class="sr">Truth table. 1 means ON and 0 means OFF.</caption><thead><tr>${th}</tr></thead><tbody>${b}</tbody></table><p class="legend">1 = ON, 0 = OFF. Tap a row to set the switches.</p>`;
+}
+function adderTable(L){
+  const b=L.kind==='adderb',cur=curRow();
+  let body='';
+  for(let r=0;r<4;r++){
+    const q=rowAB(2,r),known=b||S.seen.has(r),s=ev(S.p,q.a,q.b),c=ev(S.q,q.a,q.b);
+    const ws=b&&s!==(q.a!==q.b),wc=b&&c!==(q.a&&q.b);
+    const cell=(v,w)=>known?bit(v,'o',w?' wrong':''):'<span class="bit q" aria-label="not tried yet">?</span>';
+    body+=`<tr data-act="row" data-r="${r}" class="${r===cur?'cur':''}" title="Tap to set the switches"><td>${bit(q.a,'in')}</td><td>${bit(q.b,'in')}</td><td>${cell(s,ws)}</td><td>${cell(c,wc)}</td></tr>`;
+  }
+  return `<table class="tt"><caption class="sr">Half adder truth table</caption><thead><tr><th scope="col">A</th><th scope="col">B</th><th scope="col">Sum</th><th scope="col">Carry</th></tr></thead><tbody>${body}</tbody></table><p class="legend">${b?'A red ring means the lamp is wrong for that row. ':''}Tap a row to set the switches.</p>`;
+}
+function gateChips(L,id='p',withNot=true){
+  const gs=L.allow.gates,al=L.allow;
+  let h='<div class="seg" role="group" aria-label="Pieces to build with">';
+  h+=gs.map(g=>`<button class="chip" data-act="gate" data-drag="gate" data-c="${id}" data-g="${g}" data-fid="g-${id}-${g}" aria-pressed="${cc(id).g===g}">${gateIcon(g)}${g}</button>`).join('');
+  if(withNot&&(al.bA||al.bB||al.bO))h+=`<span class="chip bubchip" data-drag="bubble" role="img" aria-label="NOT. Drag it onto a dotted circle.">${BUBBLE_ICON}NOT</span>`;
+  return h+'</div>';
+}
+function gateIcon(g){
+  const sh=SHAPES[g];
+  return `<svg class="gicon" viewBox="14 -54 126 108" aria-hidden="true"><path d="${sh.d}" fill="${COL[g]}" class="gs"/>${g==='XOR'?'<path d="M24,-48 C41,-25 41,25 24,48" class="gs2"/>':''}</svg>`;
+}
+const BUBBLE_ICON='<svg class="gicon" viewBox="-14 -14 28 28" aria-hidden="true"><circle r="10" class="bub"/></svg>';
+const DRAG_HELP='Drag a gate onto the gate spot. Drag a NOT onto a dotted circle, and drag it away to remove it. Tapping works too.';
+function buildPanel(L){
+  const lockedOut=L.allow.bO||!(L.allow.bA||L.allow.bB)?'':' No NOT is allowed on the way out in this level.';
+  const help=(L.allow.gates.length>1||L.allow.bA||L.allow.bB||L.allow.bO)?DRAG_HELP:'';
+  const mine=`<div class="card"><h2>Your gate</h2>${gateChips(L)}<p class="legend">${help}${lockedOut}</p></div>`;
+  if(L.story){
+    const st=L.story;
+    return mine+`<div class="card"><h2>The rule</h2><p class="rule">${st.rule}</p><p class="legend">Yours: <b>${formula(S.p,st.sa,st.sb)}</b></p></div>`;
+  }
+  const ok=matches(L);
+  return mine+`<div class="card"><div class="eq"><div><span class="lab">Target</span><b>${L.hidden?'? ? ?':formula(L.target)}</b></div><div class="mid ${ok?'y':'n'}" aria-label="${ok?'equal':'not equal yet'}">${ok?'=':'≠'}</div><div><span class="lab">Yours</span><b>${formula(S.p)}</b></div></div></div>`;
+}
+function adderPanel(L){
+  const a=+S.a,b=+S.b,s=ev(S.p,S.a,S.b)?1:0,c=ev(S.q,S.a,S.b)?1:0;
+  let h=`<div class="card"><h2>Adding in binary</h2><div class="readout" aria-live="polite">${a} + ${b} = ${c}${s}<small>Carry ${c}, sum ${s}<br>Everyday numbers: ${a} + ${b} = ${a+b}</small></div></div>`;
+  if(L.kind==='adderb')h+=`<div class="card"><h2>Your gates</h2><p class="sub2">Sum gate (top lamp)</p>${gateChips(L,'p',true)}<p class="sub2">Carry gate (bottom lamp)</p>${gateChips(L,'q',false)}<p class="legend">${DRAG_HELP}</p><p class="legend">Sum: <b>${formula(S.p)}</b><br>Carry: <b>${formula(S.q)}</b></p></div>`;
+  return h;
+}
+function nandPanel(L){
+  const refs=refsFor(L,L.nands-1);
+  return `<div class="card"><h2>Plugs</h2><div class="seg">${refs.map(r=>`<span class="chip tokchip" data-drag="tok" data-ref="${r}" role="img" aria-label="Plug ${r}">${tokIcon(r)}${r==='A'||r==='B'?'Switch '+r:'Output of NAND '+r.slice(1)}</span>`).join('')}</div><p class="legend">Drag a plug into a socket. Drag it out to remove it. Tapping a socket changes its plug too. Every socket needs a plug.</p></div>`;
+}
+function sandboxPanel(L){
+  const p=S.p,sig=sigOf(p),dm=deMorgan(p),tw=twinsOf(p);
+  return `<div class="card"><h2>Your gate</h2>${gateChips(L)}<p class="legend">${DRAG_HELP}</p></div>
+  <div class="card found"><h2>You made</h2><div class="big">${NAMES[sig]}</div><div>${formula(p)}</div>
+  <div class="row"><button class="btn small ghost" data-act="flipall" data-fid="flipall" ${dm?'':'disabled'}>${dm?'Try the De Morgan trick':'De Morgan needs AND or OR'}</button></div></div>
+  <div class="card"><h2>Twins (${tw.length})</h2>${tw.length?`<ul class="twins">${tw.map(t=>`<li><button class="chip" data-act="load" data-t='${JSON.stringify({g:t.g,bA:t.bA,bB:t.bB,bO:t.bO})}' data-fid="tw-${t.g}-${+t.bA}${+t.bB}${+t.bO}">${formula(t)}</button></li>`).join('')}</ul>`:'<p class="legend">No other twin among AND, OR and XOR with NOTs.</p>'}</div>`;
+}
+function winHTML(L){
+  const w=L.win;
+  let h=`<section class="win" role="status"><h2>${w.h}</h2><p>${w.p}</p>`;
+  if(w.name)h+=`<p class="name">${w.lead||'This gate is called'} <b>${w.name}</b></p>`;
+  if(w.law)h+=`<div class="law"><span>${w.law.l}</span><i>=</i><span>${w.law.r}</span></div><p class="tip">${w.law.tip}</p>`;
+  const last=S.lvl===LEVELS.length-1;
+  h+=`<div class="row"><button class="btn" data-act="next" data-fid="next">${last?'All levels':'Next level'}</button></div></section>`;
+  return h;
+}
+function viewPlay(){
+  const L=LEVELS[S.lvl];
+  const showWin=S.won&&L.kind!=='sandbox'&&(isExp(L)||matches(L));
+  let stage;
+  if(L.kind==='build')stage=L.story?stageSingle(L):stageMirror(L);
+  else if(L.kind==='nand')stage=stageNand(L);
+  else if(L.kind==='adder'||L.kind==='adderb')stage=stageAdder(L);
+  else stage=stageSingle(L);
+  let side='';
+  if(L.kind==='build')side+=buildPanel(L);
+  if(L.kind==='sandbox')side+=sandboxPanel(L);
+  if(L.kind==='nand')side+=nandPanel(L);
+  if(L.kind==='adder'||L.kind==='adderb')side+=adderPanel(L);
+  const cmp=L.kind==='build'||L.kind==='nand'||L.kind==='adderb';
+  side+=`<div class="card"><h2>${cmp?'Compare every row':'Truth table'}</h2>${tableHTML(L)}</div>`;
+  if(showWin)side=winHTML(L)+side;
+  side+=`<div class="row"><button class="btn small ghost" data-act="hint" data-fid="hint" aria-expanded="${S.hint}">${S.hint?'Hide hint':'Need a hint?'}</button>${isExp(L)?'':'<button class="btn small ghost" data-act="reset" data-fid="reset">Start over</button>'}${S.lvl>0?'<button class="btn small ghost" data-act="prev" data-fid="prev">Back</button>':''}</div>${S.hint?`<p class="hint">${L.hint}</p>`:''}`;
+  return `<div><p class="kicker">World ${L.w+1} · Level ${S.lvl+1} of ${LEVELS.length}</p><h1 class="lvl">${L.t}</h1></div>
+  <div class="say">${palSVG(L.pal)}<p>${L.say}</p></div>
+  <div class="play"><div class="stage">${stage}</div><div class="side">${side}</div></div>`;
+}
+function viewMap(){
+  let h=`<div><h1 class="lvl">Pick a level</h1><p class="sub">Play in order, or jump to any level. ${done.size} of ${LEVELS.length} finished.</p></div>`;
+  WORLDS.forEach((wn,wi)=>{
+    h+=`<section class="world"><h2>World ${wi+1}<span>${wn}</span></h2><div class="tiles">`;
+    LEVELS.forEach((L,i)=>{if(L.w!==wi)return;h+=`<button class="tile ${done.has(i)?'done':''}" data-act="go" data-i="${i}" data-fid="t${i}"><span class="num">${i+1}</span><span class="tn">${L.t}</span>${done.has(i)?'<span class="ck" aria-label="finished">✓</span>':''}</button>`;});
+    h+='</div></section>';
+  });
+  return h;
+}
+let app=null;
+function render(){
+  if(!app)return;
+  const f=document.activeElement&&document.activeElement.getAttribute?document.activeElement.getAttribute('data-fid'):null;
+  const top=`<div class="top"><h2 class="brand">${LOGO}Logic Lab</h2><button class="btn small ghost" data-act="${S.view==='map'?'resume':'map'}" data-fid="maptoggle">${S.view==='map'?'Back to game':'Levels'}</button></div>`;
+  app.innerHTML=top+(S.view==='map'?viewMap():viewPlay());
+  if(f){const el=app.querySelector(`[data-fid="${f}"]`);if(el&&el.focus)el.focus({preventScroll:true});}
+}
+
+/* ---------- drag and drop: pointer events work for mouse, touch and pen ---------- */
+let drag=null,suppress=false,ghost=null,hotEl=null;
+const GHOST_BUBBLE='<svg viewBox="-22 -22 44 44"><circle r="15" class="bub" style="stroke-width:3.5"/></svg>';
+const ghostTok=r=>`<svg viewBox="-22 -22 44 44"><circle r="18" fill="${tokFill(r,true)}" class="tokc"/><text y="5" text-anchor="middle" class="toklbl" style="font-size:15px" fill="var(--on-ink)">${r}</text></svg>`;
+function targetAt(e,d){
+  const off=e.pointerType==='touch'?30:0;
+  for(const el of document.elementsFromPoint(e.clientX,e.clientY-off)){
+    if(!el.closest)continue;
+    if(d.type==='gate'){const z=el.closest('[data-drop="gate"]');if(z)return z;}
+    else if(d.type==='tok'||d.type==='tokmove'){const g=el.closest('g[data-act="sock"]');if(g)return g;}
+    else{const g=el.closest('g[data-act="bub"]');if(g)return g;}
+  }
+  return null;
+}
+function onDown(e){
+  if(e.button!==undefined&&e.button!==0)return;
+  const el=e.target.closest&&e.target.closest('[data-drag],g[data-act="sw"],g[data-act="bub"],g[data-act="sock"]');
+  if(!el)return;
+  const L=LEVELS[S.lvl],d={el,x0:e.clientX,y0:e.clientY,moved:false,id:e.pointerId};
+  if(el.dataset.drag==='bubble')d.type='bubble';
+  else if(el.dataset.drag==='gate'){d.type='gate';d.g=el.dataset.g;}
+  else if(el.dataset.drag==='tok'){d.type='tok';d.ref=el.dataset.ref;}
+  else if(el.dataset.act==='sw'){d.type='sw';d.k=el.dataset.k;d.on=el.getAttribute('aria-checked')==='true';d.knobs=[...el.querySelectorAll('.knob')];}
+  else if(el.dataset.act==='sock'&&el.dataset.filled==='true'){d.type='tokmove';d.gi=+el.dataset.gi;d.si=+el.dataset.si;d.ref=S.nd[d.gi][d.si];}
+  else if(el.dataset.act==='bub'&&el.getAttribute('aria-pressed')==='true'&&L.allow&&L.allow[el.dataset.k]){d.type='move';d.k=el.dataset.k;d.c=el.dataset.c||'p';}
+  else return;
+  drag=d;
+  window.addEventListener('pointermove',onMove,{passive:false});
+  window.addEventListener('pointerup',onUp);
+  window.addEventListener('pointercancel',onCancel);
+}
+function endDrag(){
+  window.removeEventListener('pointermove',onMove);
+  window.removeEventListener('pointerup',onUp);
+  window.removeEventListener('pointercancel',onCancel);
+  if(ghost){ghost.remove();ghost=null;}
+  if(hotEl){hotEl.classList.remove('hot');hotEl=null;}
+  app.classList.remove('dg-bubble','dg-gate','dg-tok');
+  document.body.classList.remove('dragging');
+}
+function onMove(e){
+  const d=drag;
+  if(!d||e.pointerId!==d.id)return;
+  const dx=e.clientX-d.x0,dy=e.clientY-d.y0;
+  if(!d.moved){
+    if(Math.hypot(dx,dy)<8)return;
+    d.moved=true;
+    document.body.classList.add('dragging');
+    if(d.type!=='sw'){
+      ghost=document.createElement('div');ghost.className='dragghost';
+      ghost.innerHTML=d.type==='gate'?gateIcon(d.g):(d.type==='tok'||d.type==='tokmove')?ghostTok(d.ref):GHOST_BUBBLE;
+      document.body.appendChild(ghost);
+      app.classList.add(d.type==='gate'?'dg-gate':(d.type==='tok'||d.type==='tokmove')?'dg-tok':'dg-bubble');
+      if(d.type==='move'||d.type==='tokmove')d.el.style.opacity='.3';
+    }
+  }
+  e.preventDefault();
+  if(d.type==='sw'){
+    const lim=26,c=d.on?Math.max(-lim,Math.min(0,dx)):Math.max(0,Math.min(lim,dx));
+    d.knobs.forEach(k=>{k.style.transform=`translateX(${c}px)`;});
+    return;
+  }
+  const off=e.pointerType==='touch'?30:0;
+  ghost.style.transform=`translate(${e.clientX}px,${e.clientY-off}px)`;
+  const t=targetAt(e,d);
+  if(t!==hotEl){if(hotEl)hotEl.classList.remove('hot');hotEl=t;if(t)t.classList.add('hot');}
+}
+function onUp(e){
+  const d=drag;
+  if(!d||e.pointerId!==d.id)return;
+  const t=d.moved&&d.type!=='sw'?targetAt(e,d):null;
+  endDrag();drag=null;
+  if(!d.moved)return;
+  suppress=true;setTimeout(()=>{suppress=false;},80);
+  const L=LEVELS[S.lvl],al=L.allow||{};
+  if(d.type==='sw'){
+    const dx=e.clientX-d.x0;
+    if(Math.abs(dx)>=14&&(dx>0)!==d.on){S[d.k]=!S[d.k];return afterChange();}
+    return render();
+  }
+  if(d.type==='bubble'){
+    if(t&&al[t.dataset.k]){cc(t.dataset.c)[t.dataset.k]=true;return afterChange();}
+    return render();
+  }
+  if(d.type==='move'){
+    if(t&&t.dataset.k===d.k&&(t.dataset.c||'p')===d.c)return render();
+    cc(d.c)[d.k]=false;
+    if(t&&al[t.dataset.k])cc(t.dataset.c)[t.dataset.k]=true;
+    return afterChange();
+  }
+  if(d.type==='gate'){
+    if(t){cc(t.dataset.c||'p').g=d.g;return afterChange();}
+    return render();
+  }
+  if(d.type==='tok'||d.type==='tokmove'){
+    const gi=t?+t.dataset.gi:-1,ok=t&&refsFor(L,gi).includes(d.ref);
+    if(d.type==='tokmove'){
+      if(t&&+t.dataset.gi===d.gi&&+t.dataset.si===d.si)return render();
+      S.nd[d.gi][d.si]=null;
+    }
+    if(ok)S.nd[gi][+t.dataset.si]=d.ref;
+    return afterChange();
+  }
+}
+function onCancel(){endDrag();drag=null;render();}
+
+/* ---------- clicks and keys ---------- */
+function onClick(e){
+  if(suppress)return;
+  const el=e.target.closest('[data-act]');
+  if(!el||el.disabled||el.hasAttribute('disabled'))return;
+  const act=el.dataset.act,L=LEVELS[S.lvl];
+  if(act==='sw'){if(el.dataset.k==='a')S.a=!S.a;else S.b=!S.b;return afterChange();}
+  if(act==='row'){const q=rowAB(S.p.n,+el.dataset.r);S.a=q.a;S.b=q.b;return afterChange();}
+  if(act==='bub'){const k=el.dataset.k;if(L.allow&&L.allow[k]){const c=cc(el.dataset.c);c[k]=!c[k];return afterChange();}return;}
+  if(act==='gate'){cc(el.dataset.c||'p').g=el.dataset.g;return afterChange();}
+  if(act==='sock'){
+    const gi=+el.dataset.gi,si=+el.dataset.si,opts=[null].concat(refsFor(L,gi)),cur=S.nd[gi][si];
+    S.nd[gi][si]=opts[(opts.indexOf(cur)+1)%opts.length];
+    return afterChange();
+  }
+  if(act==='flipall'){const d=deMorgan(S.p);if(d){S.p=d;afterChange();}return;}
+  if(act==='load'){S.p=C(JSON.parse(el.dataset.t));return afterChange();}
+  if(act==='hint'){S.hint=!S.hint;return render();}
+  if(act==='reset')return startLevel(S.lvl,true);
+  if(act==='next'){return S.lvl<LEVELS.length-1?startLevel(S.lvl+1):(S.view='map',render(),window.scrollTo(0,0));}
+  if(act==='prev')return startLevel(S.lvl-1);
+  if(act==='map'){S.view='map';render();return window.scrollTo(0,0);}
+  if(act==='resume'){S.view='play';return render();}
+  if(act==='go')return startLevel(+el.dataset.i);
+}
+function onKey(e){
+  if(e.key!=='Enter'&&e.key!==' ')return;
+  const el=e.target.closest&&e.target.closest('g[data-act]');
+  if(el){e.preventDefault();onClick({target:el});}
+}
+function boot(){
+  app=document.getElementById('app');
+  app.addEventListener('click',onClick);
+  app.addEventListener('pointerdown',onDown);
+  app.addEventListener('keydown',onKey);
+  let i=LEVELS.findIndex((_,j)=>!done.has(j));
+  if(i<0)i=0;
+  startLevel(i,true);
+}
+if(typeof document!=='undefined'&&document.getElementById&&document.getElementById('app'))boot();
+</script>
