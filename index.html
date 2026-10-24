@@ -32,32 +32,33 @@
   --good:#4FD686; --bad:#FF7F85; --focus:#8FA8FF; --btn:#7192FF; --btn-ink:#0E1440; color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.45 var(--font-body);
-  padding-block:14px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 var(--font-body);
+  padding-block:10px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 button{font:inherit;color:inherit}
-.wrap{max-width:1000px;margin:0 auto;display:grid;gap:18px}
+.wrap{max-width:1000px;margin:0 auto;display:grid;gap:12px}
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{display:flex;align-items:center;gap:10px;font:700 28px/1 var(--font-display);margin:0}
-.brand svg{width:46px;height:34px;flex:none}
+.brand{display:flex;align-items:center;gap:8px;font:700 24px/1 var(--font-display);margin:0}
+.brand svg{width:38px;height:28px;flex:none}
 .btn{font:600 18px/1 var(--font-display);border:0;border-radius:999px;padding:14px 24px;min-height:50px;background:var(--btn);color:var(--btn-ink);cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.2)}
 .btn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.2)}
 .btn.ghost{background:var(--surface-2);color:var(--ink);box-shadow:0 4px 0 var(--line)}
-.btn.small{font-size:16px;padding:11px 18px;min-height:44px}
+.btn.small{font-size:15px;padding:10px 16px;min-height:42px}
 .btn[disabled]{opacity:.55;cursor:default}
 .btn:focus-visible,.chip:focus-visible,.tile:focus-visible,tr:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
-.kicker{font:600 13px var(--font-display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
-h1.lvl{font:700 clamp(30px,7vw,42px)/1.1 var(--font-display);margin:2px 0 0;text-wrap:balance}
-.say{display:flex;gap:12px;align-items:flex-end}
-.pal{flex:0 0 78px;width:78px;height:auto}
-.say p{margin:0;background:var(--surface);border:2px solid var(--line);border-radius:22px 22px 22px 6px;padding:12px 16px;font-size:18px;max-width:62ch;min-width:0}
+.kicker{font:600 12px var(--font-display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h1.lvl{font:700 clamp(24px,6vw,34px)/1.1 var(--font-display);margin:2px 0 0;text-wrap:balance}
+.say{display:flex;gap:10px;align-items:flex-end}
+.pal{flex:0 0 58px;width:58px;height:auto}
+.say p.isrule{font:600 16px/1.3 var(--font-display)}
+.say p{margin:0;background:var(--surface);border:2px solid var(--line);border-radius:18px 18px 18px 6px;padding:7px 12px;font-size:15px;line-height:1.3;max-width:62ch;min-width:0}
 .play{display:grid;gap:16px;align-items:start}
 @media (min-width:860px){.play{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}}
-.stage{background:var(--surface);border:2px solid var(--line);border-radius:28px;padding:10px}
+.stage{background:var(--surface);border:2px solid var(--line);border-radius:24px;padding:8px 8px 10px}
 .stage svg{display:block;width:100%;height:auto}
-.side{display:grid;gap:14px;min-width:0}
-.card{background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:14px}
-.card h2{font:600 15px var(--font-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
-.legend{margin:6px 2px 0;font-size:15px;color:var(--muted)}
+.side{display:grid;gap:10px;min-width:0}
+.card{background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:10px 14px}
+.card h2{font:600 13px var(--font-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+.legend{margin:4px 2px 0;font-size:14px;line-height:1.35;color:var(--muted)}
 
 /* circuit pieces */
 .wire{fill:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
@@ -68,8 +69,8 @@ h1.lvl{font:700 clamp(30px,7vw,42px)/1.1 var(--font-display);margin:2px 0 0;text
 .gs2{fill:none;stroke:var(--ink);stroke-width:3;stroke-linecap:round}
 .bub{fill:var(--bubble);stroke:var(--ink);stroke-width:2.5}
 .bubslot{fill:var(--surface);stroke:var(--muted);stroke-width:2;stroke-dasharray:3 3;animation:nudge 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-.sockring{fill:var(--surface);stroke:var(--muted);stroke-width:2;stroke-dasharray:3 3;animation:nudge 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-.tokc{stroke:var(--ink);stroke-width:2.5}
+.sockring{fill:var(--surface);stroke:var(--muted);stroke-width:1.5;stroke-dasharray:3 3;animation:nudge 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.tokc{stroke:var(--ink);stroke-width:1.5}
 .hit{fill:transparent;stroke:none}
 g[tabindex]{cursor:pointer;outline:none}
 g[tabindex]:focus-visible .hit{stroke:var(--focus);stroke-width:3}
@@ -84,16 +85,16 @@ g[tabindex]:focus-visible .hit{stroke:var(--focus);stroke-width:3}
 .lamp.on .bulb{animation:pop .3s ease-out}
 
 /* tables and chips */
-.tt{width:100%;border-collapse:separate;border-spacing:0 6px;text-align:center}
-.tt th{font:600 13px var(--font-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:0 4px 2px}
-.tt td{padding:6px 4px;background:var(--bg)}
+.tt{width:100%;border-collapse:separate;border-spacing:0 4px;text-align:center}
+.tt th{font:600 12px var(--font-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:0 4px 2px}
+.tt td{padding:4px;background:var(--bg)}
 .tt td:first-child{border-radius:14px 0 0 14px}
 .tt td:last-child{border-radius:0 14px 14px 0}
 .tt tr[data-act]{cursor:pointer}
 .tt tr.cur td{background:var(--surface-2);box-shadow:inset 0 2px 0 var(--ink),inset 0 -2px 0 var(--ink)}
 .tt tr.cur td:first-child{box-shadow:inset 0 2px 0 var(--ink),inset 0 -2px 0 var(--ink),inset 2px 0 0 var(--ink)}
 .tt tr.cur td:last-child{box-shadow:inset 0 2px 0 var(--ink),inset 0 -2px 0 var(--ink),inset -2px 0 0 var(--ink)}
-.bit{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;font:700 18px var(--font-display)}
+.bit{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;font:700 16px var(--font-display)}
 .bit.in1{background:var(--wire-on);color:var(--on-ink)}
 .bit.in0{background:var(--track);color:var(--ink)}
 .bit.o1{background:var(--lamp);color:var(--on-ink)}
@@ -112,13 +113,13 @@ g[tabindex]:focus-visible .hit{stroke:var(--focus);stroke-width:3}
 .eq b{font:600 18px/1.2 var(--font-display);overflow-wrap:anywhere}
 .eq .mid{font:700 30px var(--font-display)}
 .eq .mid.y{color:var(--good)}.eq .mid.n{color:var(--bad)}
-.rule{font:600 19px/1.3 var(--font-display);margin:0}
+.rule{font:400 15px/1.35 var(--font-body);margin:0}
 .readout{font:700 36px/1.1 var(--font-display);text-align:center;letter-spacing:.02em}
 .readout small{display:block;font:400 16px var(--font-body);color:var(--muted);letter-spacing:0;margin-top:6px}
 .sub2{font:600 13px var(--font-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}
 .sub2:first-of-type{margin-top:0}
 .row{display:flex;flex-wrap:wrap;gap:10px}
-.hint{background:var(--surface-2);border-radius:16px;padding:12px 14px;margin:0}
+.hint{background:var(--surface-2);border-radius:16px;padding:10px 12px;margin:0;font-size:15px}
 .win{border:3px solid var(--good);background:var(--surface);border-radius:24px;padding:16px 18px;display:grid;gap:10px;animation:pop .35s ease-out}
 .win h2{font:700 26px/1.1 var(--font-display);margin:0;color:var(--ink);text-wrap:balance}
 .win p{margin:0}
@@ -139,11 +140,12 @@ g[tabindex]:focus-visible .hit{stroke:var(--focus);stroke-width:3}
 .gicon .bub{stroke-width:3}
 .tokchip{display:inline-flex;cursor:grab}
 .tokchip .gicon{width:46px;height:40px}
-.traybar{position:sticky;bottom:10px;z-index:5;display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;margin-top:8px;padding:6px 12px;background:var(--surface-2);border:2px solid var(--ink);border-radius:20px;box-shadow:0 6px 14px rgba(0,0,0,.18)}
-.traybar .chip{min-height:42px;padding:5px 14px 5px 8px;font-size:16px}
-.traybar .gicon{width:38px;height:30px}
+.traybar{position:sticky;bottom:10px;z-index:5;display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-top:4px;padding:5px 2px;background:none;border:0;box-shadow:none}
+.traybar .chip{min-height:36px;padding:2px 9px 2px 5px;font-size:14px;gap:3px;border-width:2px}
+.traybar .gicon{width:26px;height:22px}
 .trayl{font:600 13px var(--font-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .gate-zone{fill:transparent;stroke:none}
+g[data-act="gatecyc"]:focus-visible .gate-zone{stroke:var(--focus);stroke-width:3}
 .slot{fill:var(--surface-2);stroke:var(--muted);stroke-width:3;stroke-dasharray:7 5}
 .slotlbl{font:600 16px var(--font-display);fill:var(--muted)}
 .dg-gate .slot{stroke:var(--focus)}
@@ -157,6 +159,26 @@ body.dragging{-webkit-user-select:none;user-select:none;cursor:grabbing}
 .dragghost{position:fixed;left:0;top:0;z-index:50;pointer-events:none;width:64px;height:52px;margin:-26px 0 0 -32px}
 .dragghost svg{width:100%;height:100%;filter:drop-shadow(0 6px 6px rgba(0,0,0,.28))}
 .dragghost .gs,.dragghost .gs2{stroke-width:5}
+
+/* wiring board */
+g[data-act="wterm"]{touch-action:none;-webkit-user-select:none;user-select:none;cursor:pointer}
+g[data-act="wterm"][data-kind="out"],g[data-act="wterm"][data-con="true"]{cursor:grab}
+.wt-hit{fill:transparent;stroke:none}
+.wt-in{fill:var(--surface);stroke:var(--muted);stroke-width:1.5}
+.wt-in.empty{stroke-dasharray:3 3;animation:nudge 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.wt-in.con{stroke:var(--ink);stroke-width:1.5}
+.wt-in.con.on{fill:var(--wire-on)}
+.wt-in.con.off{fill:var(--track)}
+.wt-out{stroke:var(--ink);stroke-width:1.5}
+.wt-out.on{fill:var(--wire-on)}
+.wt-out.off{fill:var(--track)}
+.wt-out.sel{stroke:var(--focus);stroke-width:4}
+.dg-wire .wt-in.empty,.wsel .wt-in.empty{stroke:var(--focus);stroke-width:3}
+g.wgate{cursor:pointer}
+g.wgate:focus-visible{outline:none;filter:drop-shadow(0 0 4px var(--focus))}
+g[data-act="wterm"]:focus-visible .wt-hit{stroke:var(--focus);stroke-width:3}
+g.hot .wt-in{fill:var(--bubble);stroke:var(--focus);stroke-width:4}
+.ghostw{stroke:var(--focus);stroke-dasharray:6 5;pointer-events:none}
 
 /* map */
 .world{display:grid;gap:10px}
@@ -254,25 +276,144 @@ const LEVELS=[
   hint:'Try a NOT on input A and on the output. Leave B alone.',
   win:{h:'Boss beaten!',p:'Flipping every NOT and swapping the gate gave you a perfect twin, even with a mixed circuit.',law:{l:'A AND NOT B',r:'NOT (NOT A OR B)',tip:RULE}}},
 
- {w:3,t:'Door alarm',kind:'build',pal:{g:'AND'},target:C({g:'AND'}),start:'OR',
+ {w:3,t:'Door alarm',kind:'build',pal:{g:'AND'},target:C({g:'AND'}),start:'AND',
   story:{sa:'Door',sb:'Night',out:'Alarm',rule:'The alarm rings when the door is open and it is night.'},
-  allow:ALLNOT,
+  allow:{gates:['AND','OR','XOR'],bA:false,bB:false,bO:false},
   say:'Help, we need an alarm! Switch A is the door (ON means open). Switch B is night time. Make the lamp follow the rule.',
-  hint:'Which gate says “both”?',
+  hint:'Which gate says \u201Cboth\u201D?',
   win:{h:'The alarm works!',p:'AND rings the alarm only when the door is open and it is night. Real alarms use gates just like this.'}},
- {w:3,t:'Sprinkler',kind:'build',pal:{g:'AND',bO:true},target:C({g:'AND',bB:true}),start:'AND',
+ {w:3,t:'Hallway light',kind:'build',pal:{g:'OR'},target:C({g:'OR'}),start:'AND',
+  story:{sa:'Motion',sb:'Door',out:'Light',rule:'The hallway light turns on when someone moves in the hall, or when the front door is open.'},
+  allow:{gates:['AND','OR','XOR'],bA:false,bB:false,bO:false},
+  say:'Let\u2019s light the hallway! Switch A is the motion sensor. Switch B says the front door is open.',
+  hint:'Which gate is happy with just one of the two?',
+  win:{h:'Lights on!',p:'OR turns the light on if either thing happens, or both. Lots of real lights work like this.'}},
+ {w:3,t:'Sprinkler',kind:'build',pal:{g:'AND'},target:C({g:'AND',bB:true}),start:'AND',
   story:{sa:'Dry',sb:'Rain',out:'Sprinkler',rule:'Water the garden when the soil is dry and it is not raining.'},
-  allow:{gates:['AND','OR'],bA:true,bB:true,bO:true},
+  allow:{gates:['AND','OR','XOR'],bA:true,bB:true,bO:true},
   say:'Water the garden, but never when it rains! Switch A says the soil is dry. Switch B says it is raining.',
   hint:'Rain should turn the sprinkler off. Which input needs a NOT?',
-  win:{h:'Happy garden!',p:'A NOT on the rain switch turns rain into “no rain”. There is a second answer that uses an OR gate. Tap Start over and see if you can find it.'}},
+  win:{h:'Happy garden!',p:'A NOT on the rain switch turns rain into \u201Cno rain\u201D. There is a second answer that uses an OR gate. Tap Start over and see if you can find it.'}},
+ {w:3,t:'Stair light',kind:'build',pal:{g:'XOR'},target:C({g:'XOR'}),start:'AND',
+  story:{sa:'Top',sb:'Bottom',out:'Light',rule:'You can turn the stair light on or off from the top or the bottom. Flip either switch and the light changes. With both switches down, the light is off.'},
+  allow:{gates:['AND','OR','XOR'],bA:true,bB:true,bO:true},
+  say:'Make a light you can switch from both ends of the stairs! Switch A is at the top. Switch B is at the bottom.',
+  hint:'Which gate lights up when the two switches are different?',
+  win:{h:'Switch from anywhere!',p:'XOR lights up when exactly one switch is up. Flipping either switch changes the answer, which is why real houses wire stair lights this way.',name:'XOR',lead:'This gate is called'}},
  {w:3,t:'Pet shop door',kind:'build',pal:{g:'OR',bO:true},target:C({g:'OR',bO:true}),start:'AND',
   story:{sa:'Cat',sb:'Dog',out:'Door opens',rule:'The pet shop door opens only when there is no cat and no dog.'},
-  allow:{gates:['AND','OR'],bA:true,bB:true,bO:true},
+  allow:{gates:['AND','OR','XOR'],bA:true,bB:true,bO:true},
   say:'The shop door must stay shut if a cat or a dog is waiting. Switch A is a cat. Switch B is a dog.',
   hint:'You can do it with an OR gate and one NOT. There is a twin with an AND gate too!',
-  win:{h:'Door fixed!',p:'“Not (cat or dog)” means the same as “no cat and no dog”. Both circuits do the job.',law:{l:'NOT (Cat OR Dog)',r:'NOT Cat AND NOT Dog',tip:RULE}}},
-
+  win:{h:'Door fixed!',p:'\u201CNot (cat or dog)\u201D means the same as \u201Cno cat and no dog\u201D. Both circuits do the job.',law:{l:'NOT (Cat OR Dog)',r:'NOT Cat AND NOT Dog',tip:RULE}}},
+ {w:3,t:'Dessert time',kind:'build',pal:{g:'OR'},target:C({g:'OR',bA:true}),start:'AND',
+  story:{sa:'School night',sb:'Homework',out:'Dessert',rule:'Dessert is allowed unless it is a school night and the homework is not done.'},
+  allow:{gates:['AND','OR','XOR'],bA:true,bB:true,bO:true},
+  say:'Dessert rules! Switch A says it is a school night. Switch B says the homework is done.',
+  hint:'Think about which switch should be flipped before it goes in.',
+  win:{h:'Dessert for everyone!',p:'A NOT on the school-night switch plus an OR gate does the job. There are other answers too. Try Start over and look for one.'}},
+ {w:3,t:'Sock match',kind:'build',pal:{g:'XOR',bO:true},target:C({g:'XOR',bO:true}),start:'AND',
+  story:{sa:'Sock 1',sb:'Sock 2',out:'Match',rule:'The matching light turns on when both socks are the same colour. A switch that is ON means that sock is blue.'},
+  allow:{gates:['AND','OR','XOR'],bA:true,bB:true,bO:true},
+  say:'Sort the socks! Switch A is sock 1 (ON is blue). Switch B is sock 2 (ON is blue). The lamp says whether they match.',
+  hint:'One gate lights up for different socks. How can you turn that around?',
+  win:{h:'A perfect pair!',p:'Same colour means both blue or both not blue. XOR with a NOT on the end does exactly that. It is called XNOR.',name:'XNOR',lead:'This circuit is called'}},
+ {w:3,t:'Launch light',kind:'build',pal:{g:'AND',bO:true},target:C({g:'AND',bO:true}),start:'AND',
+  story:{sa:'Pilot 1',sb:'Pilot 2',out:'Safe light',rule:'The red safety light stays on unless both pilots press their buttons at the same time.'},
+  allow:{gates:['AND','OR','XOR'],bA:true,bB:true,bO:true},
+  say:'Rocket safety! The red light must stay on unless both pilots press their buttons. Switch A is pilot 1. Switch B is pilot 2.',
+  hint:'Try a gate you already know and flip its answer.',
+  win:{h:'Safe to launch!',p:'The light goes out only when both buttons are pressed. That is a NAND.',law:{l:'NOT (Pilot 1 AND Pilot 2)',r:'NOT Pilot 1 OR NOT Pilot 2',tip:RULE}}},
+ {w:3,t:'Rocket launch',kind:'build3',pal:{g:'AND'},fn:(a,b,c)=>a&&b&&c,
+  story:{sa:'Engines',sb:'Fuel',sc:'Weather',out:'Launch',rule:'The rocket launches when the engines are ready, the fuel is full and the sky is clear.'},
+  allow:{gates:['AND','OR','XOR'],bA:true,bB:true,bO:true},
+  say:'Two gates in a row now! Gate 1 mixes A and B. Its answer goes into gate 2 together with C. Build the rocket launcher.',
+  hint:'Try the same gate in both places.',
+  win:{h:'Three checks, two gates!',p:'Gate 1 checks the engines and the fuel. Gate 2 checks that answer together with the weather. Chaining gates lets you combine as many things as you like.'}},
+ {w:3,t:'Garage light',kind:'build3',pal:{g:'AND'},fn:(a,b,c)=>(a||b)&&c,
+  story:{sa:'Motion',sb:'Car',sc:'Dark',out:'Light',rule:'The garage light turns on when it is dark and either a car arrives or someone moves.'},
+  allow:{gates:['AND','OR','XOR'],bA:true,bB:true,bO:true},
+  say:'Light up the garage! A is the motion sensor, B is a car arriving and C says it is dark. The first gate mixes A and B.',
+  hint:'The first gate handles \u201Cmotion or car\u201D. The second gate adds the darkness.',
+  win:{h:'Garage lit!',p:'OR mixes the two things that can switch the light on, then AND makes sure it is dark. Real motion lights work like this.'}},
+ {w:3,t:'Greenhouse fan',kind:'build3',pal:{g:'AND'},fn:(a,b,c)=>(a||b)&&!c,
+  story:{sa:'Hot',sb:'Humid',sc:'Window',out:'Fan',rule:'The greenhouse fan runs when it is hot or humid, but never while the window is open.'},
+  allow:{gates:['AND','OR','XOR'],bA:true,bB:true,bO:true},
+  say:'Keep the plants happy! A says it is hot, B says it is humid and C says the window is open. The fan must stop when the window is open.',
+  hint:'Hot or humid goes in gate 1. The window needs a NOT somewhere.',
+  win:{h:'Cool plants!',p:'OR for hot or humid, then AND with NOT window. A NOT on a switch turns it into its opposite.'}},
+ {w:3,t:'Play time',kind:'build3',pal:{g:'OR'},fn:(a,b,c)=>(a&&b)||c,
+  story:{sa:'Homework',sb:'Room',sc:'Weekend',out:'Go play',rule:'You can go and play if the homework is done and your room is tidy, or if it is the weekend.'},
+  allow:{gates:['AND','OR','XOR'],bA:true,bB:true,bO:true},
+  say:'When can you go out to play? A is homework done, B is room tidy and C is the weekend. Build the rule.',
+  hint:'The weekend skips the other two checks. Which gate goes second?',
+  win:{h:'Out to play!',p:'AND for both chores, then OR with the weekend. The order of the gates changes the rule completely.'}},
+ {w:3,t:'Lift door',kind:'build3',pal:{g:'AND'},fn:(a,b,c)=>(a&&!b)||c,
+  story:{sa:'Button',sb:'Person',sc:'Key',out:'Door',rule:'The lift door closes when someone presses the button and nobody is standing in the doorway, or when the firefighter key is turned.'},
+  allow:{gates:['AND','OR','XOR'],bA:true,bB:true,bO:true},
+  say:'Build a safe lift door! A is the close button, B is a person in the doorway and C is the firefighter key.',
+  hint:'Gate 1 needs button and no person. The key is added in gate 2.',
+  win:{h:'Doors closing, mind the gap!',p:'The NOT on the person switch keeps the door open while someone is in the way. The key overrides everything through the OR gate.'}},
+ {w:3,t:'Stair motion light',kind:'build3',pal:{g:'XOR'},fn:(a,b,c)=>(a!==b)||c,
+  story:{sa:'Top',sb:'Bottom',sc:'Motion',out:'Light',rule:'The stair light follows the two stair switches. It also turns on whenever someone moves on the stairs.'},
+  allow:{gates:['AND','OR','XOR'],bA:true,bB:true,bO:true},
+  say:'Upgrade the stair light! A is the top switch, B is the bottom switch and C is a motion sensor.',
+  hint:'The two stair switches go together in gate 1. Which gate did you use for the stairs?',
+  win:{h:'Smart stairs!',p:'XOR keeps the two-switch trick and OR adds the motion sensor. You just chained two different gates.'}},
+ {w:3,t:'Picnic',kind:'build3',pal:{g:'AND'},fn:(a,b,c)=>!a&&!b&&c,
+  story:{sa:'Rain',sb:'Wind',sc:'Sandwiches',out:'Picnic',rule:'We have a picnic when it is not raining, it is not windy and the sandwiches are packed.'},
+  allow:{gates:['AND','OR','XOR'],bA:true,bB:true,bO:true},
+  say:'Plan a picnic! A is rain, B is wind and C is sandwiches packed. Gate 1 mixes A and B.',
+  hint:'There are two answers! One uses NOTs on A and B. The other uses a NOT in gate 2.',
+  win:{h:'Picnic time!',p:'No rain and no wind is the same as not (rain or wind). That is De Morgan again, this time hiding inside a bigger circuit.',law:{l:'NOT (Rain OR Wind)',r:'NOT Rain AND NOT Wind',tip:RULE}}},
+ {w:3,t:'Wire the fan',kind:'wire',pal:{g:'AND'},fn:(a,b,c)=>(a||b)&&!c,
+  story:{sa:'Hot',sb:'Humid',sc:'Window',out:'Fan',rule:'The greenhouse fan runs when it is hot or humid, but never while the window is open.'},
+  wire:{final:'g3',sources:[{id:'A',x:43,y:40},{id:'B',x:43,y:105},{id:'C',x:43,y:225}],
+        gates:[{id:'g1',type:'OR',x:104,y:70,s:.62},{id:'g2',type:'NOT',x:104,y:225,s:.62},{id:'g3',type:'AND',x:212,y:150,s:.62}],
+        lamp:{x:338,y:150,s:.55}},
+  say:'Time to be an electrician! The gates are already in place. Connect the wires yourself. Each switch or gate sends its answer out of the square on its right, and every gate takes its inputs in at the squares on its left.',
+  hint:'The window must go through the NOT gate first. Then the NOT and the OR both go into the AND gate.',
+  win:{h:'Wired up!',p:'You built the whole circuit yourself. Hot and humid meet in the OR gate. The window goes through a NOT. Then both answers meet in the AND gate, which runs the fan.'}},
+ {w:3,t:'Wire the lock',kind:'wire',pal:{g:'AND'},fn:(a,b,c)=>(a&&b)||c,
+  story:{sa:'Code A',sb:'Code B',sc:'Master key',out:'Door',rule:'The safe opens when both codes are right, or when the master key is turned.'},
+  wire:{final:'g2',sources:[{id:'A',x:43,y:40},{id:'B',x:43,y:105},{id:'C',x:43,y:225}],
+        gates:[{id:'g1',type:'OR',swap:['AND','OR','XOR'],x:104,y:72,s:.62},{id:'g2',type:'AND',swap:['AND','OR','XOR'],x:212,y:150,s:.62}],
+        lamp:{x:338,y:150,s:.55}},
+  say:'Now you choose the gates too! Wire the circuit, and tap a gate to change what kind it is. The safe opens when both codes are right, or when the master key is turned.',
+  hint:'Both codes must be right together, so they go into a gate that needs both. Then that answer and the master key go into a gate that needs either one.',
+  win:{h:'Safe cracked!',p:'Both codes meeting is an AND. After that, either the codes or the key is enough, and that is an OR. You picked both gates and wired them yourself.'}},
+ {w:3,t:'Wire the stairs',kind:'wire',pal:{g:'AND'},fn:(a,b,c)=>(a!==b)||c,
+  story:{sa:'Top switch',sb:'Bottom switch',sc:'Cleaner key',out:'Light',rule:'The stair light toggles when you flip either switch, and it is always on while the cleaner has the key in.'},
+  wire:{final:'g2',sources:[{id:'A',x:43,y:40},{id:'B',x:43,y:105},{id:'C',x:43,y:225}],
+        gates:[{id:'g1',type:'AND',swap:['AND','OR','XOR'],x:104,y:72,s:.62},{id:'g2',type:'AND',swap:['AND','OR','XOR'],x:212,y:150,s:.62}],
+        lamp:{x:338,y:150,s:.55}},
+  say:'Two switches at the top and bottom of the stairs! Flipping either one should change the light. The cleaner has a key that keeps it on. Wire it up and pick the gates.',
+  hint:'A light that changes whenever one switch flips needs the XOR gate. The cleaner key then joins with an OR.',
+  win:{h:'Lights on!',p:'XOR is the stair trick: the light changes when exactly one of the two switches is different. OR then lets the cleaner key win.'}},
+ {w:3,t:'Wire the hallway',kind:'wire',pal:{g:'AND'},fn:(a,b,c)=>(b||c)&&!a,
+  story:{sa:'Daylight',sb:'Motion',sc:'Button',out:'Light',rule:'The hallway light comes on when someone moves or presses the button, but only when it is not daylight.'},
+  wire:{final:'g2',sources:[{id:'A',x:43,y:45},{id:'B',x:43,y:135},{id:'C',x:43,y:225}],
+        gates:[{id:'g1',type:'AND',swap:['AND','OR','XOR'],bub:true,x:116,y:180,s:.62},{id:'g2',type:'OR',swap:['AND','OR','XOR'],bub:true,x:222,y:110,s:.62}],
+        lamp:{x:342,y:110,s:.55}},
+  say:'A smart hallway! The light comes on when someone moves or presses the button, but only when it is dark. Wire it up, pick the gates, and use yellow NOTs where you need to flip a signal.',
+  hint:'Motion or the button goes into one gate. Daylight must be flipped by a NOT. Then both answers go into a gate that needs both.',
+  win:{h:'Bright idea!',p:'Motion OR button makes one answer. NOT daylight flips the other. AND joins them, so the light needs someone there and a dark hallway.'}},
+ {w:3,t:'Two-key vault',kind:'wire',pal:{g:'AND'},fn:(a,b,c)=>(a!==b)&&!c,
+  story:{sa:'Key 1',sb:'Key 2',sc:'Guard',out:'Vault',rule:'The vault opens when exactly one of the two keys is turned, as long as the guard is not looking.'},
+  wire:{final:'g2',sources:[{id:'A',x:43,y:45},{id:'B',x:43,y:135},{id:'C',x:43,y:225}],
+        gates:[{id:'g1',type:'OR',swap:['AND','OR','XOR'],bub:true,x:116,y:90,s:.62},{id:'g2',type:'OR',swap:['AND','OR','XOR'],bub:true,x:222,y:160,s:.62}],
+        lamp:{x:342,y:160,s:.55}},
+  say:'A sneaky vault! It opens when exactly one of the two keys is turned, and only when the guard is not looking. Wire it, pick the gates, and add yellow NOTs where you need them.',
+  hint:'Exactly one key is the XOR gate. The guard needs a NOT. Both answers then need to be true together.',
+  win:{h:'Vault open!',p:'XOR checks that exactly one key is turned. A NOT on the guard means the guard is away. AND needs both to be true.'}},
+ {w:3,t:'Switch selector',kind:'wire',pal:{g:'AND'},fn:(a,b,c)=>b?c:a,
+  story:{sa:'Hall',sb:'Selector',sc:'Kitchen',out:'Lamp',rule:'A shared lamp. When the selector is off, the hall switch is in charge. When the selector is on, the kitchen switch is in charge.'},
+  wire:{final:'g3',sources:[{id:'A',x:43,y:40},{id:'B',x:43,y:130},{id:'C',x:43,y:220}],
+        gates:[{id:'g1',type:'OR',swap:['AND','OR','XOR'],bub:true,x:116,y:62,s:.62},{id:'g2',type:'OR',swap:['AND','OR','XOR'],bub:true,x:116,y:190,s:.62},{id:'g3',type:'AND',swap:['AND','OR','XOR'],bub:true,x:222,y:126,s:.62}],
+        lamp:{x:342,y:126,s:.55}},
+  say:'The big one! One lamp, and two switches that share it. The selector decides which switch is in charge: off means the hall switch, on means the kitchen switch. You will need three gates and some yellow NOTs.',
+  hint:'Hall switch AND selector-is-off is one gate. Kitchen switch AND selector-is-on is another. Then either of them can light the lamp.',
+  win:{h:'Smart switching!',p:'This is a selector, used inside computers all the time. The selector lets one switch through and blocks the other, and an OR gate collects whichever one got through.'}},
  {w:4,t:'Adding with gates',kind:'adder',pal:{g:'XOR'},c1:C({g:'XOR'}),c2:C({g:'AND'}),
   say:'Computers add with gates! A and B are the two numbers, 0 or 1. Two lamps show the answer in binary. Try 1 + 1.',
   hint:'Look at the big sum under the circuit. Try all four switch settings.',
@@ -364,7 +505,7 @@ function refsFor(L,gi){
 }
 
 /* ---------- state ---------- */
-const S={lvl:0,view:'play',a:false,b:false,c:false,p:C({}),q:null,nd:null,seen:new Set([0]),won:false,hint:false,fresh:false};
+const S={lvl:0,view:'play',a:false,b:false,c:false,w:{},gt:{},gb:{},wsel:null,p:C({}),q:null,nd:null,seen:new Set([0]),won:false,hint:false,fresh:false};
 const cc=id=>id==='q'?S.q:S.p;
 const isExp=L=>L.kind==='explore'||L.kind==='adder'||L.kind==='faex';
 let done=new Set();
@@ -373,7 +514,44 @@ try{JSON.parse(localStorage.getItem(KEY)||'[]').forEach(i=>done.add(i));}catch(e
 function saveDone(){try{localStorage.setItem(KEY,JSON.stringify([...done]));}catch(e){}}
 const curRow=()=>S.p.n===1?(S.a?1:0):S.p.n===3?((S.a?4:0)+(S.b?2:0)+(S.c?1:0)):((S.a?2:0)+(S.b?1:0));
 const rowsN=()=>1<<S.p.n;
+const WSH={AND:{tip:117,fx:72},OR:{tip:124,fx:80},XOR:{tip:124,fx:82},NOT:{tip:106,fx:57}};
+const WG=L=>L.wire.gates.map(g=>Object.assign({},g,{type:S.gt[g.id]||g.type}));
+function wvals(L,a,b,c){
+  const vals={A:!!a,B:!!b,C:!!c},gm={},done={};
+  WG(L).forEach(g=>{gm[g.id]=g;});
+  function val(n,d){
+    if(n in vals)return vals[n];
+    if(n in done)return done[n];
+    if(d>10)return false;
+    const g=gm[n],need=g.type==='NOT'?1:2,ins=[];
+    for(let i=0;i<need;i++){const sr=S.w[n+':'+i];if(!sr)return (done[n]=false);ins.push(!!val(sr,d+1)!==!!S.gb[n+':'+(i?'b':'a')]);}
+    const raw=g.type==='NOT'?!ins[0]:!!GATES[g.type](ins[0],ins[1]);
+    return (done[n]=raw!==!!S.gb[n+':o']);
+  }
+  const out={};
+  WG(L).forEach(g=>{out[g.id]=val(g.id,0);});
+  const ls=S.w['lamp:0'];
+  return {vals:Object.assign({},vals,out),lamp:ls?!!val(ls,0):false};
+}
+function wdeps(L,node,target,d){
+  if(d>10)return false;
+  const g=WG(L).find(x=>x.id===node);
+  if(!g)return false;
+  const need=g.type==='NOT'?1:2;
+  for(let i=0;i<need;i++){const sr=S.w[node+':'+i];if(sr&&(sr===target||wdeps(L,sr,target,d+1)))return true;}
+  return false;
+}
+function canWire(L,src,dst){if(dst==='lamp')return true;if(src===dst)return false;return !wdeps(L,src,dst,0);}
+function c3(a,b,c){const v1=sg(S.p,a,b);return sg(S.q,v1.o,c).o;}
 function matches(L){
+  if(L.kind==='wire'){
+    for(let r=0;r<8;r++){const q=rowAB(3,r);if(wvals(L,q.a,q.b,q.c).lamp!==!!L.fn(q.a,q.b,q.c))return false;}
+    return true;
+  }
+  if(L.kind==='build3'){
+    for(let r=0;r<8;r++){const q=rowAB(3,r);if(c3(q.a,q.b,q.c)!==!!L.fn(q.a,q.b,q.c))return false;}
+    return true;
+  }
   if(L.kind==='fa'){
     if(S.nd.some(g=>g[0]==null||g[1]==null))return false;
     for(let r=0;r<8;r++){
@@ -400,12 +578,14 @@ const yourVal=(L,a,b)=>L.kind==='nand'?ndEval(S.nd,a,b).o:ev(S.p,a,b);
 
 function startLevel(i,quiet){
   const L=LEVELS[i];
-  S.lvl=i;S.view='play';S.a=false;S.b=false;S.c=false;S.won=false;S.hint=false;S.fresh=false;
+  S.lvl=i;S.view='play';S.a=false;S.b=false;S.c=false;S.w={};S.gt={};S.gb={};S.wsel=null;S.won=false;S.hint=false;S.fresh=false;
   S.q=null;S.nd=null;
   if(L.kind==='explore')S.p=C(L.c);
   else if(L.kind==='adder'){S.p=C(L.c1);S.q=C(L.c2);}
   else if(L.kind==='adderb'){S.p=C({g:null});S.q=C({g:null});}
   else if(L.kind==='nand'){S.p=C({n:L.inputs});S.nd=Array.from({length:L.nands},()=>[null,null]);}
+  else if(L.kind==='build3'){S.p=C({n:3,g:null});S.q=C({g:null});}
+  else if(L.kind==='wire'){S.p=C({n:3,g:null});if(L.wire.final)S.w['lamp:0']=L.wire.final;}
   else if(L.kind==='fa'||L.kind==='faex'){S.p=C({n:3});S.nd=L.kind==='faex'?L.prefill.map(x=>x.slice()):L.gates.map(()=>[null,null]);}
   else S.p=C({g:L.kind==='sandbox'?L.start:null});
   S.seen=new Set([0]);
@@ -450,7 +630,7 @@ function bubbleBtn(x,y,key,on,editable,label,id='p'){
   return `<g data-act="bub" data-c="${id}" data-k="${key}" data-fid="bub-${id}-${key}" tabindex="0" role="button" aria-pressed="${on}" aria-label="NOT on ${label}"><circle cx="${x}" cy="${y}" r="19" class="hit"/>${vis}</g>`;
 }
 function circ(c,o){
-  const v=sg(c,o.a,o.b),W=183,al=o.allow||{},ed=!!o.edit,id=o.id||'p';
+  const v=sg(c,o.a,o.b),W=o.W||183,al=o.allow||{},ed=!!o.edit,id=o.id||'p';
   let h=`<g transform="translate(${o.ox},${o.oy}) scale(${o.s})">`;
   if(c.n===1){
     if(c.g==='WIRE')h+=wire(`M0,0 H${W}`,v.o);
@@ -472,24 +652,26 @@ function circ(c,o){
     }
     if(c.bO){h+=wire(`M${tip},0 H${tip+2}`,v.z)+wire(`M${tip+15},0 H${W}`,v.o);top+=bubbleBtn(tip+8,0,'bO',true,ed&&al.bO,'the output',id);}
     else{h+=wire(`M${tip},0 H${W}`,v.z);if(ed&&al.bO)top+=bubbleBtn(tip+8,0,'bO',false,true,'the output',id);}
-    const zone=ed&&al.gates&&al.gates.length>=1?`<rect class="gate-zone" data-drop="gate" data-c="${id}" x="26" y="-54" width="104" height="108" rx="22"/>`:'';
-    h+=zone+(empty?`<rect x="34" y="-48" width="83" height="96" rx="22" class="slot"/><text x="76" y="6" text-anchor="middle" class="slotlbl">gate</text>`:`<path d="${sh.d}" fill="${COL[c.g]}" class="gs"/>`+(c.g==='XOR'?'<path d="M24,-48 C41,-25 41,25 24,48" class="gs2"/>':'')+face(sh.fx,v.o))+top;
+    const grp=ed&&al.gates&&al.gates.length>=1;
+    const zone=grp?`<rect class="gate-zone" data-drop="gate" data-c="${id}" x="26" y="-54" width="104" height="108" rx="22"/>`:'';
+    const body=empty?`<rect x="34" y="-48" width="83" height="96" rx="22" class="slot"/><text x="76" y="6" text-anchor="middle" class="slotlbl">gate</text>`:`<path d="${sh.d}" fill="${COL[c.g]}" class="gs"/>`+(c.g==='XOR'?'<path d="M24,-48 C41,-25 41,25 24,48" class="gs2"/>':'')+face(sh.fx,v.o);
+    h+=(grp?`<g data-act="gatecyc" data-c="${id}" data-fid="gc-${id}" tabindex="0" role="button" aria-label="Gate${c.g?' '+c.g:' slot'}. Press to change it.">${zone}${body}</g>`:body)+top;
   }
-  h+=`<g transform="translate(205,0)">${lampSVG(v.o)}</g></g>`;
+  h+=(o.nolamp?'':`<g transform="translate(205,0)">${lampSVG(v.o)}</g>`)+'</g>';
   return h;
 }
 function sw(key,label,x,y,on){
   const tx=on?'var(--on-ink)':'var(--ink)';
   return `<g data-act="sw" data-k="${key}" data-fid="sw-${key}" tabindex="0" role="switch" aria-checked="${on}" aria-label="Switch ${label}, ${on?'on':'off'}">
   <rect class="hit" x="${x-35}" y="${y-23}" width="70" height="46" rx="16"/>
-  <rect x="${x-31}" y="${y-18}" width="62" height="36" rx="18" fill="${on?'var(--wire-on)':'var(--track)'}" stroke="var(--ink)" stroke-width="3"/>
+  <rect x="${x-31}" y="${y-18}" width="62" height="36" rx="18" fill="${on?'var(--wire-on)':'var(--track)'}" stroke="var(--ink)" stroke-width="1.5"/>
   <text x="${on?x-13:x+13}" y="${y+5.5}" text-anchor="middle" class="swtxt" fill="${tx}">${on?1:0}</text>
-  <circle class="knob" cx="${on?x+13:x-13}" cy="${y}" r="13" fill="var(--surface)" stroke="var(--ink)" stroke-width="3"/>
+  <circle class="knob" cx="${on?x+13:x-13}" cy="${y}" r="13" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
   <text class="swlbl knob" x="${on?x+13:x-13}" y="${y+5.5}" text-anchor="middle">${label}</text></g>`;
 }
 function stageSingle(L){
   const p=S.p,a=S.a,b=S.b,st=L.story,ed=L.kind==='sandbox'||L.kind==='build',ox=104;
-  let s=`<svg viewBox="${p.n===1?'0 32 360 136':'0 0 360 200'}" role="group" aria-label="Circuit with switches and a lamp">`;
+  let s=`<svg viewBox="${p.n===1?'0 40 360 120':'0 34 360 134'}" role="group" aria-label="Circuit with switches and a lamp">`;
   if(p.n===1)s+=wireG(`M74,100 H${ox}`,a)+sw('a','A',43,100,a);
   else s+=wireG(`M74,72 H${ox}`,a)+wireG(`M74,128 H${ox}`,b)+sw('a','A',43,72,a)+sw('b','B',43,128,b);
   s+=circ(p,{ox,oy:100,s:1,a,b,edit:ed,allow:L.allow});
@@ -519,7 +701,7 @@ const stageAdder=L=>stageTwo(L,{c:S.p,id:'p',edit:L.kind==='adderb',label:'SUM'}
 /* NAND plug board */
 const tokFill=(r,on)=>on?(r[0]==='N'?'var(--xor)':'var(--wire-on)'):'var(--track)';
 function tokIcon(r){
-  return `<svg class="gicon" viewBox="-14 -14 28 28" aria-hidden="true"><circle r="12" fill="${tokFill(r,true)}" class="tokc"/><text y="4.5" text-anchor="middle" class="toklbl" fill="var(--on-ink)">${r}</text></svg>`;
+  return `<svg class="gicon" viewBox="-14 -14 28 28" aria-hidden="true"><rect x="-12" y="-12" width="24" height="24" rx="5" fill="${tokFill(r,true)}" class="tokc"/><text y="4.5" text-anchor="middle" class="toklbl" fill="var(--on-ink)">${r}</text></svg>`;
 }
 function plugGate(i,g,res,o){
   const nd=S.nd[i],sh=SHAPES[o.type],tip=sh.tip,filled=nd[0]!=null&&nd[1]!=null,ov=!!res.outs[i],bx=o.bub?15:0;
@@ -528,34 +710,141 @@ function plugGate(i,g,res,o){
   if(o.lampX!=null)h+=wire(`M${tip+bx},0 H${((o.lampX-20*o.lampS-g.ox)/g.s).toFixed(1)}`,ov);
   else{
     h+=wire(`M${tip+bx},0 H${tip+bx+11}`,ov);
-    h+=`<circle cx="${tip+bx+23}" cy="0" r="13" fill="${tokFill('N',ov)}" class="tokc"/><text x="${tip+bx+23}" y="5" text-anchor="middle" class="toklbl" fill="${ov?'var(--on-ink)':'var(--ink)'}">N${i+1}</text>`;
+    h+=`<rect x="${tip+bx+10}" y="-13" width="26" height="26" rx="5" fill="${tokFill('N',ov)}" class="tokc"/><text x="${tip+bx+23}" y="5" text-anchor="middle" class="toklbl" fill="${ov?'var(--on-ink)':'var(--ink)'}">N${i+1}</text>`;
   }
   h+=`<path d="${sh.d}" fill="${COL[o.type]}" class="gs"/>`+(o.type==='XOR'?'<path d="M24,-48 C41,-25 41,25 24,48" class="gs2"/>':'')+face(sh.fx,filled&&ov)+(o.bub?`<circle cx="${tip+8}" cy="0" r="7.5" class="bub"/>`:'');
   [-28,28].forEach((y,si)=>{
     const ref=nd[si],on=ref!=null&&res.vals[i][si];
     const inner=ref!=null
-      ?`<circle cx="11" cy="${y}" r="14" fill="${tokFill(ref,on)}" class="tokc"/><text x="11" y="${y+5}" text-anchor="middle" class="toklbl" fill="${on?'var(--on-ink)':'var(--ink)'}">${ref}</text>`
-      :`<circle cx="11" cy="${y}" r="12" class="sockring"/>`;
+      ?`<rect x="-3" y="${y-14}" width="28" height="28" rx="5" fill="${tokFill(ref,on)}" class="tokc"/><text x="11" y="${y+5}" text-anchor="middle" class="toklbl" fill="${on?'var(--on-ink)':'var(--ink)'}">${ref}</text>`
+      :`<rect x="-1" y="${y-12}" width="24" height="24" rx="5" class="sockring"/>`;
     h+=o.locked?`<g>${inner}</g>`
       :`<g data-act="sock" data-gi="${i}" data-si="${si}" data-filled="${ref!=null}" data-fid="sock-${i}-${si}" tabindex="0" role="button" aria-label="Socket ${si+1} of gate ${i+1}: ${ref||'empty'}"><circle cx="11" cy="${y}" r="24" class="hit"/>${inner}</g>`;
   });
   return h+'</g>';
 }
+/* wires from each plugged source (switch or gate output) to the socket it feeds, drawn behind everything */
+function plugWires(gl,srcs,res){
+  let h='';
+  gl.forEach((g,i)=>{
+    [-28,28].forEach((dy,si)=>{
+      const ref=S.nd[i][si];if(ref==null)return;
+      const from=srcs[ref];if(!from)return;
+      const x2=g.ox-3*g.s,y2=g.oy+dy*g.s,dx=Math.max(16,Math.abs(x2-from.x)*.5);
+      h+=wireG(`M${from.x},${from.y} C${from.x+dx},${from.y} ${x2-dx},${y2} ${x2},${y2}`,res.vals[i][si]);
+    });
+  });
+  return h;
+}
+const gateSrc=(g,o)=>({x:g.ox+(SHAPES[o.type].tip+(o.bub?15:0)+36)*g.s,y:g.oy});
 function stageNand(L){
   const k=L.nands,a=S.a,b=S.b,res=ndEval(S.nd,a,b);
   const lay=k===1?{h:200,g:[{ox:104,oy:100,s:1}],lamp:{x:305,y:100,s:1},sw:L.inputs===1?[[43,100]]:[[43,72],[43,128]]}
     :k===2?{h:200,g:[{ox:86,oy:100,s:.72},{ox:214,oy:100,s:.72}],lamp:{x:334,y:100,s:.7},sw:[[43,72],[43,128]]}
     :{h:240,g:[{ox:84,oy:62,s:.75},{ox:84,oy:178,s:.75},{ox:216,oy:120,s:.75}],lamp:{x:336,y:120,s:.7},sw:[[43,92],[43,148]]};
   let s=`<svg viewBox="0 0 360 ${lay.h}" role="group" aria-label="NAND plug board with switches and a lamp">`;
+  const srcN={A:{x:lay.sw[0][0]+31,y:lay.sw[0][1]}};
+  if(L.inputs===2)srcN.B={x:lay.sw[1][0]+31,y:lay.sw[1][1]};
+  lay.g.forEach((g,i)=>{if(i<k-1)srcN['N'+(i+1)]=gateSrc(g,{type:'AND',bub:true});});
+  s+=plugWires(lay.g,srcN,res);
   s+=sw('a','A',lay.sw[0][0],lay.sw[0][1],a);
   if(L.inputs===2)s+=sw('b','B',lay.sw[1][0],lay.sw[1][1],b);
   lay.g.forEach((g,i)=>{s+=plugGate(i,g,res,{type:'AND',bub:true,lampX:i===k-1?lay.lamp.x:null,lampS:lay.lamp.s});});
   s+=`<g transform="translate(${lay.lamp.x},${lay.lamp.y}) scale(${lay.lamp.s})">${lampSVG(!!res.o)}</g>`;
   return s+'</svg>';
 }
+function wb(x1,y1,x2,y2,on){const xm=x1+6;return wireG(`M${x1},${y1} H${xm} V${y2} H${x2}`,on);}
+function stageTree(L){
+  const a=S.a,b=S.b,c=S.c,st=L.story;
+  const v1=sg(S.p,a,b),v2=sg(S.q,v1.o,c),al1=Object.assign({},L.allow,{bO:false});
+  let m='<svg viewBox="0 8 360 248" role="group" aria-label="Two gates in a row with three switches and a lamp">';
+  m+=wb(74,44,84,67.6,a)+wb(74,136,84,112.4,b)+wb(74,230,198,212.4,c);
+  m+=wireG('M190,90 V167.6 H198',v1.o)+wireG('M318,190 H328',v2.o);
+  m+=sw('a','A',43,44,a)+sw('b','B',43,136,b)+sw('c','C',43,230,c);
+  m+=`<text x="12" y="20" class="tag">${st.sa.toUpperCase()}</text><text x="12" y="112" class="tag">${st.sb.toUpperCase()}</text><text x="12" y="206" class="tag">${st.sc.toUpperCase()}</text>`;
+  m+=circ(S.p,{ox:84,oy:90,s:.8,a,b,edit:true,id:'p',allow:al1,nolamp:true,W:132.5});
+  m+=circ(S.q,{ox:198,oy:190,s:.8,a:v1.o,b:c,edit:true,id:'q',allow:L.allow,nolamp:true,W:150});
+  m+=`<g transform="translate(338,190) scale(.6)">${lampSVG(!!v2.o)}</g><text x="338" y="226" text-anchor="middle" class="tag">${st.out.toUpperCase()}</text>`;
+  m+=`<text x="141" y="30" text-anchor="middle" class="tag">GATE 1</text><text x="255" y="140" text-anchor="middle" class="tag">GATE 2</text>`;
+  return m+'</svg>';
+}
+function wOut(L,id){
+  const so=L.wire.sources.find(x=>x.id===id);
+  if(so)return {x:so.x+46,y:so.y};
+  const g=WG(L).find(x=>x.id===id);
+  return {x:g.x+(WSH[g.type].tip+(g.type==='NOT'?20:g.bub?25:10))*g.s,y:g.y};
+}
+function wIn(L,node,pin){
+  if(node==='lamp'){const l=L.wire.lamp;return {x:l.x-26*l.s,y:l.y};}
+  const g=WG(L).find(x=>x.id===node);
+  return {x:g.x+(g.bub?-4:14)*g.s,y:g.y+(g.type==='NOT'?0:(pin?28:-28))*g.s};
+}
+function stageWire(L){
+  const W=Object.assign({},L.wire,{gates:WG(L)}),st=L.story,V=wvals(L,S.a,S.b,S.c);
+  const names={A:st.sa,B:st.sb,C:st.sc};
+  let m=`<svg class="${S.wsel?'wsel':''}" viewBox="0 0 360 270" role="group" aria-label="Wiring board. Connect the switches and gates to the lamp.">`;
+  Object.keys(S.w).forEach(key=>{
+    const sr=S.w[key],i=key.indexOf(':'),node=key.slice(0,i),pin=+key.slice(i+1);
+    const a=wOut(L,sr),b=wIn(L,node,pin),dx=Math.max(14,Math.abs(b.x-a.x)*.5);
+    m+=`<path class="wireg ${V.vals[sr]?'on':'off'}" data-wk="${key}" d="M${a.x},${a.y} C${a.x+dx},${a.y} ${b.x-dx},${b.y} ${b.x},${b.y}"/>`;
+  });
+  let bubTop='';
+  W.gates.forEach(g=>{
+    const sh=SHAPES[g.type],t=WSH[g.type].tip,need=g.type==='NOT'?1:2,ov=V.vals[g.id],hb=!!g.bub;
+    let inner='',full=true,top='';
+    for(let i=0;i<need;i++){
+      const sr=S.w[g.id+':'+i];if(!sr)full=false;
+      const y=g.type==='NOT'?0:(i?28:-28),raw=sr?V.vals[sr]:false,k=i?'b':'a',bon=!!S.gb[g.id+':'+k];
+      if(!hb)inner+=wire(`M14,${y} H40`,raw);
+      else if(bon){inner+=wire(`M-4,${y} H18`,raw)+wire(`M34,${y} H46`,sr?!raw:false);top+=wbub(g.id,k,26,y,true,'input '+(i+1));}
+      else{inner+=wire(`M-4,${y} H46`,raw);top+=wbub(g.id,k,26,y,false,'input '+(i+1));}
+    }
+    if(g.type==='NOT')inner+=wire(`M${t+15},0 H${t+20}`,ov);
+    else if(!hb)inner+=wire(`M${t},0 H${t+10}`,ov);
+    else{
+      const raw=ov!==!!S.gb[g.id+':o'];
+      if(S.gb[g.id+':o']){inner+=wire(`M${t},0 H${t+2}`,full&&raw)+wire(`M${t+15},0 H${t+25}`,ov);top+=wbub(g.id,'o',t+8,0,true,'the output');}
+      else{inner+=wire(`M${t},0 H${t+25}`,ov);top+=wbub(g.id,'o',t+8,0,false,'the output');}
+    }
+    inner+=`<path d="${sh.d}" fill="${COL[g.type]}" class="gs"/>`+(g.type==='XOR'?'<path d="M24,-48 C41,-25 41,25 24,48" class="gs2"/>':'')+face(sh.fx,full&&ov)+(g.type==='NOT'?`<circle cx="${t+8}" cy="0" r="7.5" class="bub"/>`:'');
+    const sw0=L.wire.gates.find(x=>x.id===g.id).swap;
+    if(sw0){
+      m+=`<g transform="translate(${g.x},${g.y}) scale(${g.s})" data-act="wgc" data-gid="${g.id}" data-fid="wg-${g.id}" tabindex="0" role="button" aria-label="${g.type} gate. Press to change the gate." class="wgate">${inner}</g><text x="${g.x+(sh.tip*g.s)/2+10}" y="${g.y+54*g.s+12}" text-anchor="middle" class="tag">${g.type} \u00B7 TAP</text>`;
+    }else m+=`<g transform="translate(${g.x},${g.y}) scale(${g.s})">${inner}</g>`;
+    if(top)bubTop+=`<g transform="translate(${g.x},${g.y}) scale(${g.s})">${top}</g>`;
+  });
+  m+=`<g transform="translate(${W.lamp.x},${W.lamp.y}) scale(${W.lamp.s})">${lampSVG(V.lamp)}</g><text x="${Math.min(W.lamp.x,328)}" y="${W.lamp.y+36}" text-anchor="middle" class="tag">${st.out.toUpperCase()}</text>`;
+  W.sources.forEach(so=>{
+    const k=so.id.toLowerCase();
+    m+=sw(k,so.id,so.x,so.y,S[k])+`<text x="12" y="${so.y-24}" class="tag">${names[so.id].toUpperCase()}</text>`;
+  });
+  const T=(h)=>h;
+  W.sources.forEach(so=>{const o=wOut(L,so.id);m+=outTerm(so.id,o.x,o.y,V.vals[so.id],'switch '+so.id);});
+  W.gates.forEach(g=>{
+    const o=wOut(L,g.id);if(g.id!==L.wire.final)m+=outTerm(g.id,o.x,o.y,V.vals[g.id],g.type+' gate');
+    for(let i=0;i<(g.type==='NOT'?1:2);i++){const p=wIn(L,g.id,i),sr=S.w[g.id+':'+i];m+=inTerm(g.id,i,p.x,p.y,sr,sr&&V.vals[sr],g.type+' gate');}
+  });
+  const lp=wIn(L,'lamp',0),ls=S.w['lamp:0'];
+  if(!L.wire.final)m+=inTerm('lamp',0,lp.x,lp.y,ls,ls&&V.vals[ls],'the lamp');
+  return m+bubTop+'</svg>';
+}
+function wbub(gid,k,x,y,on,label){
+  const vis=on?`<circle cx="${x}" cy="${y}" r="7.5" class="bub"/>`:`<circle cx="${x}" cy="${y}" r="7.5" class="bubslot"/>`;
+  return `<g data-act="wbub" data-gid="${gid}" data-k="${k}" data-fid="wb-${gid}-${k}" tabindex="0" role="button" aria-pressed="${on}" aria-label="NOT on ${label}"><circle cx="${x}" cy="${y}" r="11" class="hit"/>${vis}</g>`;
+}
+function outTerm(id,x,y,on,name){
+  const sel=S.wsel===id;
+  return `<g data-act="wterm" data-kind="out" data-node="${id}" data-x="${x}" data-y="${y}" data-fid="wo-${id}" tabindex="0" role="button" aria-label="Wire from ${name}${sel?', selected':''}"><circle class="wt-hit" cx="${x}" cy="${y}" r="16"/><rect class="wt-out ${on?'on':'off'}${sel?' sel':''}" x="${x-6.5}" y="${y-6.5}" width="13" height="13" rx="2.5"/></g>`;
+}
+function inTerm(node,pin,x,y,src,on,name){
+  return `<g data-act="wterm" data-kind="in" data-node="${node}" data-pin="${pin}" data-con="${!!src}" data-x="${x}" data-y="${y}" data-fid="wi-${node}-${pin}" tabindex="0" role="button" aria-label="Input ${pin+1} of ${name}, ${src?'connected. Press to remove the wire':'empty'}"><circle class="wt-hit" cx="${x}" cy="${y}" r="16"/><rect class="wt-in ${src?'con '+(on?'on':'off'):'empty'}" x="${x-7}" y="${y-7}" width="14" height="14" rx="3"/></g>`;
+}
 function stageFA(L){
   const res=ndEval(S.nd,S.a,S.b,L.gates,S.c);
   let s='<svg viewBox="0 0 360 444" role="group" aria-label="Full adder plug board with three switches and two lamps">';
+  const srcF={A:{x:74,y:170},B:{x:74,y:220},C:{x:74,y:270}},gl=[];
+  L.gates.forEach((t,i)=>{const g={ox:100,oy:52+84*i,s:.8};gl.push(g);if(L.lampGates.indexOf(i)<0)srcF['N'+(i+1)]=gateSrc(g,{type:t,bub:false});});
+  s+=plugWires(gl,srcF,res);
   s+=sw('a','A',43,170,S.a)+sw('b','B',43,220,S.b)+sw('c','C',43,270,S.c)+'<text x="12" y="248" class="tag">CARRY IN</text>';
   L.gates.forEach((t,i)=>{
     const oy=52+84*i,li=L.lampGates.indexOf(i);
@@ -577,6 +866,7 @@ const bit=(v,k,x='')=>`<span class="bit ${k}${v?1:0}${x}">${v?1:0}</span>`;
 function tableHTML(L){
   if(L.kind==='adder'||L.kind==='adderb')return adderTable(L);
   if(L.kind==='fa'||L.kind==='faex')return fullTable(L);
+  if(L.kind==='build3'||L.kind==='wire')return treeTable(L);
   const n=S.p.n,rows=rowsN(),cur=curRow(),st=L.story,build=L.kind==='build'||L.kind==='nand';
   let th=`<th scope="col">${st?st.sa:'A'}</th>`+(n===2?`<th scope="col">${st?st.sb:'B'}</th>`:'');
   th+=build?`<th scope="col">${st?'Wanted':'Target'}</th><th scope="col">Yours</th><th scope="col"><span class="sr">Same?</span></th>`:'<th scope="col">Lamp</th>';
@@ -592,6 +882,15 @@ function tableHTML(L){
     b+=`<tr data-act="row" data-r="${r}" class="${r===cur?'cur':''}" title="Tap to set the switches">${cells}</tr>`;
   }
   return `<table class="tt"><caption class="sr">Truth table. 1 means ON and 0 means OFF.</caption><thead><tr>${th}</tr></thead><tbody>${b}</tbody></table><p class="legend">1 = ON, 0 = OFF. ${build&&!L.hidden?'Make your column match the target column. ':''}Tap a row to set the switches${L.hidden?' and reveal the secret gate\u2019s answer':''}.</p>`;
+}
+function treeTable(L){
+  const cur=curRow();
+  let body='';
+  for(let r=0;r<8;r++){
+    const q=rowAB(3,r),t=!!L.fn(q.a,q.b,q.c),y=L.kind==='wire'?wvals(L,q.a,q.b,q.c).lamp:c3(q.a,q.b,q.c);
+    body+=`<tr data-act="row" data-r="${r}" class="${r===cur?'cur':''}" title="Tap to set the switches"><td>${bit(q.a,'in')}</td><td>${bit(q.b,'in')}</td><td>${bit(q.c,'in')}</td><td>${bit(t,'o')}</td><td>${bit(y,'o')}</td><td>${t===y?'<span class="same y" aria-label="same">\u2713</span>':'<span class="same n" aria-label="different">\u2717</span>'}</td></tr>`;
+  }
+  return `<table class="tt"><caption class="sr">Target truth table. 1 means ON and 0 means OFF.</caption><thead><tr><th scope="col">A</th><th scope="col">B</th><th scope="col">C</th><th scope="col">Target</th><th scope="col">Yours</th><th scope="col"><span class="sr">Same?</span></th></tr></thead><tbody>${body}</tbody></table><p class="legend">1 = ON, 0 = OFF. Make your column match the target column. Tap a row to set the switches.</p>`;
 }
 function fullTable(L){
   const b=L.kind==='fa',cur=curRow();
@@ -617,7 +916,7 @@ function adderTable(L){
   return `<table class="tt"><caption class="sr">Half adder truth table</caption><thead><tr><th scope="col">A</th><th scope="col">B</th><th scope="col">Sum</th><th scope="col">Carry</th></tr></thead><tbody>${body}</tbody></table><p class="legend">${b?'A red ring means the lamp is wrong for that row. ':''}Tap a row to set the switches.</p>`;
 }
 function pieceTray(L){
-  return `<div class="traybar" role="group" aria-label="Pieces"><span class="trayl">Pieces</span>${chipsInner(L,'p',true)}</div>`;
+  return `<div class="traybar" role="group" aria-label="Pieces">${chipsInner(L,L.kind==='build3'?'auto':'p',true)}</div>`;
 }
 function gateChips(L,id='p',withNot=true){
   return '<div class="seg" role="group" aria-label="Pieces to build with">'+chipsInner(L,id,withNot)+'</div>';
@@ -625,7 +924,7 @@ function gateChips(L,id='p',withNot=true){
 function chipsInner(L,id,withNot){
   const gs=L.allow.gates,al=L.allow;
   let h='';
-  h+=gs.map(g=>`<button class="chip" data-act="gate" data-drag="gate" data-c="${id}" data-g="${g}" data-fid="g-${id}-${g}" aria-pressed="${cc(id).g===g}">${gateIcon(g)}${g}</button>`).join('');
+  h+=gs.map(g=>`<button class="chip" data-act="gate" data-drag="gate" data-c="${id}" data-g="${g}" data-fid="g-${id}-${g}" aria-pressed="${id!=='auto'&&cc(id).g===g}">${gateIcon(g)}${g}</button>`).join('');
   if(withNot&&(al.bA||al.bB||al.bO))h+=`<span class="chip bubchip" data-drag="bubble" role="img" aria-label="NOT. Drag it onto a dotted circle.">${BUBBLE_ICON}NOT</span>`;
   return h;
 }
@@ -634,15 +933,12 @@ function gateIcon(g){
   return `<svg class="gicon" viewBox="14 -54 126 108" aria-hidden="true"><path d="${sh.d}" fill="${COL[g]}" class="gs"/>${g==='XOR'?'<path d="M24,-48 C41,-25 41,25 24,48" class="gs2"/>':''}</svg>`;
 }
 const BUBBLE_ICON='<svg class="gicon" viewBox="-14 -14 28 28" aria-hidden="true"><circle r="10" class="bub"/></svg>';
-const DRAG_HELP='Drag a gate onto the gate spot. Drag a NOT onto a dotted circle, and drag it away to remove it. Tapping works too.';
+const DRAG_HELP='Drag a gate onto the gate spot. Drag a NOT onto a dotted circle, and drag it away to remove it. Tapping a gate changes it, and tapping a circle adds or removes a NOT.';
 function buildPanel(L){
   const lockedOut=L.allow.bO||!(L.allow.bA||L.allow.bB)?'':' No NOT is allowed on the way out in this level.';
   const help=(L.allow.gates.length>1||L.allow.bA||L.allow.bB||L.allow.bO)?DRAG_HELP:'';
   const mine=`<div class="card"><h2>How to build</h2><p class="legend">${help} The pieces are in the bar under the circuit.${lockedOut}</p></div>`;
-  if(L.story){
-    const st=L.story;
-    return mine+`<div class="card"><h2>The rule</h2><p class="rule">${st.rule}</p><p class="legend">Yours: <b>${formula(S.p,st.sa,st.sb)}</b></p></div>`;
-  }
+  if(L.story)return mine;
   const ok=matches(L);
   return mine+`<div class="card"><div class="eq"><div><span class="lab">Target</span><b>${L.hidden?'? ? ?':formula(L.target)}</b></div><div class="mid ${ok?'y':'n'}" aria-label="${ok?'equal':'not equal yet'}">${ok?'=':'≠'}</div><div><span class="lab">Yours</span><b>${formula(S.p)}</b></div></div></div>`;
 }
@@ -659,6 +955,28 @@ function plugTray(L){
 }
 function nandPanel(L){
   return `<div class="card"><h2>How to plug in</h2><p class="legend">Drag a plug from the bar under the circuit into a socket, and drag it out to remove it. Tapping a socket changes its plug too. Every socket needs a plug. A, B${L.inputs===3?' and C are':' is'} a switch. N1, N2 and so on are the outputs of the gates with the same names.</p></div>`;
+}
+function buildPanel3(L){
+  const st=L.story,help=DRAG_HELP;
+  const f1=S.p.g?'('+formula(S.p,st.sa,st.sb)+')':'?';
+  return `<div class="card"><h2>How to build</h2><p class="legend">${help} The pieces are in the bar under the circuit. Gate 1 mixes A and B. Gate 2 takes its answer and C.</p></div>`;
+}
+function wirePanel(L){
+  return `<div class="card"><h2>How to wire</h2><p class="legend">Drag from a solid square on the right of a switch or gate to a hollow square on the left of a gate. The last gate is already wired to the lamp. You can also tap one square, then the other. Drag a wire away, or tap its square, to remove it. A gate only works when all of its inputs are wired.${L.wire.gates.some(g=>g.swap)?' Tap a gate marked TAP to change what kind of gate it is.':''}${L.wire.gates.some(g=>g.bub)?' Tap a dotted circle to add a yellow NOT, and tap the NOT to take it away.':''}</p></div>`;
+}
+function ruleCard(L){
+  const st=L.story;
+  if(!st)return '';
+  let yours,key='';
+  if(L.kind==='build3'||L.kind==='wire')key=`<p class="legend">A: ${st.sa} \u00B7 B: ${st.sb} \u00B7 C: ${st.sc}</p>`;
+  if(L.kind==='build3'){
+    const f1=S.p.g?'('+formula(S.p,st.sa,st.sb)+')':'?';
+    yours=S.q.g?formula(S.q,f1,st.sc):'? gate';
+  }else if(L.kind==='wire'){
+    const fx=L.wire.final?1:0,tot=WG(L).reduce((n,g)=>n+(g.type==='NOT'?1:2),1)-fx;
+    yours=(Object.keys(S.w).length-fx)+' of '+tot+' wires connected';
+  }else yours=formula(S.p,st.sa,st.sb);
+  return `<div class="card"><h2>The story</h2><p class="rule">${L.say}</p>${key}<p class="legend">Yours: <b>${yours}</b></p></div>`;
 }
 function faPanel(L){
   const a=+S.a,b=+S.b,c=+S.c,res=ndEval(S.nd,S.a,S.b,L.gates,S.c);
@@ -689,23 +1007,27 @@ function viewPlay(){
   let stage;
   if(L.kind==='build')stage=stageSingle(L);
   else if(L.kind==='nand')stage=stageNand(L);
+  else if(L.kind==='build3')stage=stageTree(L);
+  else if(L.kind==='wire')stage=stageWire(L);
   else if(L.kind==='adder'||L.kind==='adderb')stage=stageAdder(L);
   else if(L.kind==='fa'||L.kind==='faex')stage=stageFA(L);
   else stage=stageSingle(L);
   let side='';
   const cmp=L.kind==='build'||L.kind==='nand'||L.kind==='adderb'||L.kind==='fa';
-  const tcard=`<div class="card"><h2>${L.kind==='build'?'Target truth table':cmp?'Compare every row':'Truth table'}</h2>${tableHTML(L)}</div>`;
-  if(L.kind==='build')side+=tcard+buildPanel(L);
+  const tcard=`<div class="card"><h2>${(L.kind==='build'||L.kind==='build3'||L.kind==='wire')?'Target truth table':cmp?'Compare every row':'Truth table'}</h2>${tableHTML(L)}</div>`;
+  if(L.kind==='build')side+=ruleCard(L)+tcard+buildPanel(L);
+  if(L.kind==='build3')side+=ruleCard(L)+tcard+buildPanel3(L);
+  if(L.kind==='wire')side+=ruleCard(L)+tcard+wirePanel(L);
   if(L.kind==='sandbox')side+=sandboxPanel(L);
   if(L.kind==='nand')side+=nandPanel(L);
   if(L.kind==='adder'||L.kind==='adderb')side+=adderPanel(L);
   if(L.kind==='fa'||L.kind==='faex')side+=faPanel(L);
-  if(L.kind!=='build')side+=tcard;
+  if(L.kind!=='build'&&L.kind!=='build3'&&L.kind!=='wire')side+=tcard;
   if(showWin)side=winHTML(L)+side;
   side+=`<div class="row"><button class="btn small ghost" data-act="hint" data-fid="hint" aria-expanded="${S.hint}">${S.hint?'Hide hint':'Need a hint?'}</button>${isExp(L)?'':'<button class="btn small ghost" data-act="reset" data-fid="reset">Start over</button>'}${S.lvl>0?'<button class="btn small ghost" data-act="prev" data-fid="prev">Back</button>':''}</div>${S.hint?`<p class="hint">${L.hint}</p>`:''}`;
   return `<div><p class="kicker">World ${L.w+1} · Level ${S.lvl+1} of ${LEVELS.length}</p><h1 class="lvl">${L.t}</h1></div>
-  <div class="say">${palSVG(L.pal)}<p>${L.say}</p></div>
-  <div class="play"><div class="stage">${stage}${(L.kind==='nand'||L.kind==='fa')?plugTray(L):(L.kind==='build'||L.kind==='sandbox')?pieceTray(L):''}</div><div class="side">${side}</div></div>`;
+  <div class="say">${palSVG(L.pal)}<p${L.story?' class="isrule"':''}>${L.story?L.story.rule:L.say}</p></div>
+  <div class="play"><div class="stage">${stage}${(L.kind==='nand'||L.kind==='fa')?plugTray(L):(L.kind==='build'||L.kind==='build3'||L.kind==='sandbox')?pieceTray(L):''}</div><div class="side">${side}</div></div>`;
 }
 function viewMap(){
   let h=`<div><h1 class="lvl">Pick a level</h1><p class="sub">Play in order, or jump to any level. ${LEVELS.filter(l=>done.has(l.t)).length} of ${LEVELS.length} finished.</p></div>`;
@@ -728,20 +1050,21 @@ function render(){
 /* ---------- drag and drop: pointer events work for mouse, touch and pen ---------- */
 let drag=null,suppress=false,ghost=null,hotEl=null;
 const GHOST_BUBBLE='<svg viewBox="-22 -22 44 44"><circle r="15" class="bub" style="stroke-width:3.5"/></svg>';
-const ghostTok=r=>`<svg viewBox="-22 -22 44 44"><circle r="18" fill="${tokFill(r,true)}" class="tokc"/><text y="5" text-anchor="middle" class="toklbl" style="font-size:15px" fill="var(--on-ink)">${r}</text></svg>`;
+const ghostTok=r=>`<svg viewBox="-22 -22 44 44"><rect x="-18" y="-18" width="36" height="36" rx="7" fill="${tokFill(r,true)}" class="tokc"/><text y="5" text-anchor="middle" class="toklbl" style="font-size:15px" fill="var(--on-ink)">${r}</text></svg>`;
 function targetAt(e,d){
   const off=e.pointerType==='touch'?30:0;
   for(const el of document.elementsFromPoint(e.clientX,e.clientY-off)){
     if(!el.closest)continue;
     if(d.type==='gate'){const z=el.closest('[data-drop="gate"]');if(z)return z;}
     else if(d.type==='tok'||d.type==='tokmove'){const g=el.closest('g[data-act="sock"]');if(g)return g;}
+    else if(d.type==='wire'||d.type==='wirein'){const g=el.closest('g[data-act="wterm"][data-kind="in"]');if(g)return g;}
     else{const g=el.closest('g[data-act="bub"]');if(g)return g;}
   }
   return null;
 }
 function onDown(e){
   if(e.button!==undefined&&e.button!==0)return;
-  const el=e.target.closest&&e.target.closest('[data-drag],g[data-act="sw"],g[data-act="bub"],g[data-act="sock"]');
+  const el=e.target.closest&&e.target.closest('[data-drag],g[data-act="sw"],g[data-act="bub"],g[data-act="sock"],g[data-act="wterm"]');
   if(!el)return;
   const L=LEVELS[S.lvl],d={el,x0:e.clientX,y0:e.clientY,moved:false,id:e.pointerId};
   if(el.dataset.drag==='bubble')d.type='bubble';
@@ -749,6 +1072,11 @@ function onDown(e){
   else if(el.dataset.drag==='tok'){d.type='tok';d.ref=el.dataset.ref;}
   else if(el.dataset.act==='sw'){d.type='sw';d.k=el.dataset.k;d.on=el.getAttribute('aria-checked')==='true';d.knobs=[...el.querySelectorAll('.knob')];}
   else if(el.dataset.act==='sock'&&el.dataset.filled==='true'){d.type='tokmove';d.gi=+el.dataset.gi;d.si=+el.dataset.si;d.ref=S.nd[d.gi][d.si];}
+  else if(el.dataset.act==='wterm'){
+    if(el.dataset.kind==='out'){d.type='wire';d.src=el.dataset.node;}
+    else if(el.dataset.con==='true'){d.type='wirein';d.key=el.dataset.node+':'+el.dataset.pin;d.src=S.w[d.key];}
+    else return;
+  }
   else if(el.dataset.act==='bub'&&el.getAttribute('aria-pressed')==='true'&&L.allow&&L.allow[el.dataset.k]){d.type='move';d.k=el.dataset.k;d.c=el.dataset.c||'p';}
   else return;
   drag=d;
@@ -761,8 +1089,9 @@ function endDrag(){
   window.removeEventListener('pointerup',onUp);
   window.removeEventListener('pointercancel',onCancel);
   if(ghost){ghost.remove();ghost=null;}
+  if(drag&&drag.gw){drag.gw.remove();}
   if(hotEl){hotEl.classList.remove('hot');hotEl=null;}
-  app.classList.remove('dg-bubble','dg-gate','dg-tok');
+  app.classList.remove('dg-bubble','dg-gate','dg-tok','dg-wire');
   document.body.classList.remove('dragging');
 }
 function onMove(e){
@@ -773,7 +1102,16 @@ function onMove(e){
     if(Math.hypot(dx,dy)<8)return;
     d.moved=true;
     document.body.classList.add('dragging');
-    if(d.type!=='sw'){
+    if(d.type==='wire'||d.type==='wirein'){
+      d.svg=d.el.closest('svg');
+      const so=d.svg.querySelector('g[data-kind="out"][data-node="'+d.src+'"]');
+      d.sx=+so.dataset.x;d.sy=+so.dataset.y;
+      d.gw=document.createElementNS('http://www.w3.org/2000/svg','path');
+      d.gw.setAttribute('class','wireg ghostw');
+      d.svg.appendChild(d.gw);
+      app.classList.add('dg-wire');
+      if(d.type==='wirein'){const o=d.svg.querySelector('[data-wk="'+d.key+'"]');if(o)o.style.opacity='.25';}
+    }else if(d.type!=='sw'){
       ghost=document.createElement('div');ghost.className='dragghost';
       ghost.innerHTML=d.type==='gate'?gateIcon(d.g):(d.type==='tok'||d.type==='tokmove')?ghostTok(d.ref):GHOST_BUBBLE;
       document.body.appendChild(ghost);
@@ -785,6 +1123,16 @@ function onMove(e){
   if(d.type==='sw'){
     const lim=26,c=d.on?Math.max(-lim,Math.min(0,dx)):Math.max(0,Math.min(lim,dx));
     d.knobs.forEach(k=>{k.style.transform=`translateX(${c}px)`;});
+    return;
+  }
+  if(d.type==='wire'||d.type==='wirein'){
+    const off=e.pointerType==='touch'?30:0;
+    const pt=d.svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY-off;
+    const q=pt.matrixTransform(d.svg.getScreenCTM().inverse());
+    const dx=Math.max(14,Math.abs(q.x-d.sx)*.5);
+    d.gw.setAttribute('d','M'+d.sx+','+d.sy+' C'+(d.sx+dx)+','+d.sy+' '+(q.x-dx)+','+q.y+' '+q.x+','+q.y);
+    const t=targetAt(e,d);
+    if(t!==hotEl){if(hotEl)hotEl.classList.remove('hot');hotEl=t;if(t)t.classList.add('hot');}
     return;
   }
   const off=e.pointerType==='touch'?30:0;
@@ -819,6 +1167,19 @@ function onUp(e){
     if(t){cc(t.dataset.c||'p').g=d.g;return afterChange();}
     return render();
   }
+  if(d.type==='wire'){
+    if(t&&canWire(L,d.src,t.dataset.node)){S.w[t.dataset.node+':'+(t.dataset.pin||0)]=d.src;S.wsel=null;return afterChange();}
+    return render();
+  }
+  if(d.type==='wirein'){
+    if(t){
+      const key=t.dataset.node+':'+(t.dataset.pin||0);
+      if(key===d.key)return render();
+      if(canWire(L,d.src,t.dataset.node)){delete S.w[d.key];S.w[key]=d.src;return afterChange();}
+      return render();
+    }
+    delete S.w[d.key];return afterChange();
+  }
   if(d.type==='tok'||d.type==='tokmove'){
     const gi=t?+t.dataset.gi:-1,ok=t&&refsFor(L,gi).includes(d.ref);
     if(d.type==='tokmove'){
@@ -840,7 +1201,31 @@ function onClick(e){
   if(act==='sw'){S[el.dataset.k]=!S[el.dataset.k];return afterChange();}
   if(act==='row'){const q=rowAB(S.p.n,+el.dataset.r);S.a=q.a;S.b=q.b;S.c=q.c;return afterChange();}
   if(act==='bub'){const k=el.dataset.k;if(L.allow&&L.allow[k]){const c=cc(el.dataset.c);c[k]=!c[k];return afterChange();}return;}
-  if(act==='gate'){cc(el.dataset.c||'p').g=el.dataset.g;return afterChange();}
+  if(act==='gate'){
+    let id=el.dataset.c||'p';
+    if(id==='auto')id=!S.p.g?'p':!S.q.g?'q':'p';
+    cc(id).g=el.dataset.g;return afterChange();
+  }
+  if(act==='wterm'){
+    const node=el.dataset.node;
+    if(el.dataset.kind==='out'){S.wsel=S.wsel===node?null:node;return render();}
+    const key=node+':'+(el.dataset.pin||0);
+    if(S.wsel){
+      if(canWire(L,S.wsel,node)){S.w[key]=S.wsel;S.wsel=null;return afterChange();}
+      S.wsel=null;return render();
+    }
+    if(S.w[key]){delete S.w[key];return afterChange();}
+    return;
+  }
+  if(act==='wbub'){const key=el.dataset.gid+':'+el.dataset.k;if(S.gb[key])delete S.gb[key];else S.gb[key]=true;return afterChange();}
+  if(act==='wgc'){
+    const g=L.wire.gates.find(x=>x.id===el.dataset.gid),cur=S.gt[g.id]||g.type;
+    S.gt[g.id]=g.swap[(g.swap.indexOf(cur)+1)%g.swap.length];return afterChange();
+  }
+  if(act==='gatecyc'){
+    const c=cc(el.dataset.c||'p'),opts=(L.kind==='sandbox'?[]:[null]).concat(L.allow.gates);
+    c.g=opts[(opts.indexOf(c.g)+1)%opts.length];return afterChange();
+  }
   if(act==='sock'){
     const gi=+el.dataset.gi,si=+el.dataset.si,opts=[null].concat(refsFor(L,gi)),cur=S.nd[gi][si];
     S.nd[gi][si]=opts[(opts.indexOf(cur)+1)%opts.length];

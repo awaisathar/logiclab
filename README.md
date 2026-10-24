@@ -4,21 +4,22 @@ A playful logic gates game for kids. It runs in the browser as one self-containe
 
 Kids flip switches, light lamps, and drag gates and NOTs into circuits. It teaches AND, OR, NOT, NAND, NOR and XOR, then De Morgan's laws, half and full adders, and building every gate from NAND alone.
 
-## Levels (24)
+## Levels (42)
 
 | World | Levels |
 | --- | --- |
 | 1. Meet the gates | Switch and lamp, NOT, AND, OR |
 | 2. NOT tricks | Spy gate, NAND, NOR, XOR |
 | 3. De Morgan's mirror | Twin of NAND, twin of NOR, AND from an OR, OR from an AND, A but not B |
-| 4. Real-life logic | Door alarm, sprinkler, pet shop door |
+| 4. Real-life logic | Door alarm, sprinkler, pet shop door and more, then two-gate puzzles, then wiring puzzles where you connect the wires yourself (fan, lock, stairs, hallway, two-key vault, switch selector) |
 | 5. Computer parts | Half adder (explore and build), full adder (explore and build), NOT / AND / OR from NAND |
 | 6. Free play | Playground that names what you build and lists its twins |
 
 ## How to play
 
 - Drag a gate piece onto the gate spot, and drag a NOT onto a dotted circle. Drag a NOT away to remove it.
-- On the plug boards (NAND levels and the full adder), drag plugs from the bar under the circuit into the gate sockets. The bar stays on screen while you work. The plugs are the switches (A, B, C) and the outputs of other gates (N1, N2 and so on).
+- On the plug boards (NAND levels and the full adder), drag plugs from the bar under the circuit into the gate sockets. Plugs and sockets are squares, and a wire is drawn from each plug's source to its socket.
+- On the wiring puzzles, drag from a solid square (output) to a hollow square (input), or tap one then the other. Tap a gate marked TAP to change its type, and tap a dotted circle to add a yellow NOT.
 - Slide the switch knobs, or tap anything. Tapping works everywhere as a fallback.
 - Tap a row of the truth table to set the switches for you.
 
